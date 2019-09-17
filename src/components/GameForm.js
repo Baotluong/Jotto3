@@ -1,10 +1,12 @@
 import React from 'react';
+import { checkForValidGuess } from '../utility/guess';
 
 export default class GameForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            guess: ''
+            guess: '',
+            error: ''
         };
     }
     onGuessChange = (e) => {
@@ -15,16 +17,27 @@ export default class GameForm extends React.Component {
     }
     onSubmit = (e) => {
         e.preventDefault();
-        this.setState(() => ({
-            guess: ''
-        }));
-        this.props.onSubmit(this.state.guess);
+        const guess = this.state.guess.toLowerCase();
+        const error = checkForValidGuess(guess);
+        if (error) {
+            this.setState(() => ({
+                error
+            }));
+        } else {
+            this.setState(() => ({
+                guess:'',
+                error:''
+            }));
+            this.props.onSubmit(guess);
+        }
     }
     render() {
         return (
             <form
                 onSubmit={this.onSubmit}
+                className="form"
             >
+                {this.state.error && <p className="form__error">{this.state.error}</p>}
                 <input
                     type="text"
                     placeholder="Make a Guess!"
