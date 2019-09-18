@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import GameForm from './GameForm';
 import GuessList from './GuessList';
 import { addSecret, addGuess } from '../actions/game';
-import { encryptor, npcSelectSecret } from '../utility/secret';
+import { encryptor, npcSelectSecret, compareGuessToSecret } from '../utility/secret';
 import { checkForValidGuess } from '../utility/guess';
 
 export class GameBoard extends React.Component {
@@ -37,12 +37,21 @@ export class GameBoard extends React.Component {
     }
     onSubmit = (guess) => {
         const error = checkForValidGuess(guess, this.state.guesses);
-        console.log(error);
         if (!error) {
-            this.props.addGuess(this.state.gameID, guess);
+            const guessData = {
+                guess,
+                matches: compareGuessToSecret(guess, this.state.secret)
+            };
+            this.props.addGuess(this.state.gameID, guessData);
             this.setState(() => ({
-                guesses: [...this.state.guesses, guess]
+                guesses: [
+                    ...this.state.guesses,
+                    guessData
+                ]
             }));
+            if (guessData.matches < 0){
+                return "you won";
+            }
         }
         return error;
     } 

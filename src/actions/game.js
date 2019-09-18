@@ -4,8 +4,8 @@ export const addSecret = (gameID, secret) => ({
     secret
 });
 
-export const addGuess = (gameID, guess) => ({
+export const addGuess = (gameID, guessData) => ({
     type: "ADD_GUESS",
     gameID,
-    guess
+    guessData
 });

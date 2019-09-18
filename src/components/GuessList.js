@@ -10,8 +10,8 @@ export const GuessList = ({ guesses }) => (
                     <span>No Guesses</span>
                 </div>
             ) : (
-                guesses.map((guess) => {
-                    return <GuessListItem key={guess} guess={guess}/>;
+                guesses.map((guessData) => {
+                    return <GuessListItem key={guessData.guess} guess={guessData.guess} matches={guessData.matches}/>;
                 })
             )
         }

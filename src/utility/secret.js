@@ -16,6 +16,14 @@ export const npcSelectSecret = (difficulty = 0) => {
     return filteredDictionary[Math.floor(Math.random() * Math.floor(filteredDictionary.length))];
 };
 
-export const startSinglePlayer = () => {
-
+export const compareGuessToSecret = (guess, secret) => {
+    const decryptedSecret = encryptor.decrypt(secret);
+    let matches = 0;
+    if (guess === decryptedSecret) 
+        return -1;
+    guess.split('').forEach(letter => {
+        if (decryptedSecret.includes(letter))
+            matches++;
+    });
+    return matches;
 };

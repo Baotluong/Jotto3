@@ -27,7 +27,7 @@ export default (state = defaultGameState, action) => {
                         ...game,
                         guesses: [
                             ...game.guesses,
-                            action.guess
+                            action.guessData
                         ]
                     }
                 }

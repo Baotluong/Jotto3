@@ -1,8 +1,8 @@
 import React from 'react';
 
-const GuessListItem = ({ guess }) => (
+const GuessListItem = ({ guess, matches }) => (
     <div>
-        <h3>{guess}</h3>
+        <h3>{guess} - {matches > 0 ? matches : 'Winner'}</h3>
     </div>
 );
 
