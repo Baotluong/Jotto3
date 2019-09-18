@@ -5,7 +5,7 @@ const DashboardPage = () => (
     <div>
         Dashboard page content
 
-        <Link to="/game/single">
+        <Link to="/game/solo">
             <h3>Single Player</h3>
         </Link>
         <button>Versus<span>(Real player)</span></button>
