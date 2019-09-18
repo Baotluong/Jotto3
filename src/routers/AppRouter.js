@@ -14,7 +14,7 @@ const AppRouter = () => (
   <Router history={history}>
     <div>
       <Switch>
-        <PublicRoute path="/" component={SinglePlayerPage} exact={true} />
+        <PublicRoute path="/" component={DashboardPage} exact={true} />
         <PublicRoute path="/single" component={SinglePlayerPage} />
         <Route component={NotFoundPage} />
       </Switch>

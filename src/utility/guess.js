@@ -8,6 +8,7 @@ export const checkForDuplicateChars = (word) => {
 };
 
 export const checkForValidGuess = (guess) => {
+    //TODO: Turn these into options.
     const letterCount = 5;
     const allowDuplicates = false;
     if (guess.length != letterCount) {
@@ -16,7 +17,7 @@ export const checkForValidGuess = (guess) => {
         return "Your guess can only contain letters";
     } else if (!allowDuplicates && checkForDuplicateChars(guess)) {
         return "Your guess has duplicate letters";
-    } else if (!dictionary.dictionary.hasOwnProperty(guess)) {
+    } else if (!dictionary.hasOwnProperty(guess)) {
         return "Your guess is not a word";
     }
     return "";

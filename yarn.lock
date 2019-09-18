@@ -6490,6 +6490,11 @@ schema-utils@^0.3.0:
   dependencies:
     ajv "^5.0.0"
 
+scmp@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/scmp/-/scmp-2.0.0.tgz#247110ef22ccf897b13a3f0abddb52782393cd6a"
+  integrity sha1-JHEQ7yLM+JexOj8KvdtSeCOTzWo=
+
 scss-tokenizer@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/scss-tokenizer/-/scss-tokenizer-0.2.3.tgz#8eb06db9a9723333824d3f5530641149847ce5d1"
@@ -6665,6 +6670,13 @@ signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
+
+simple-encryptor@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/simple-encryptor/-/simple-encryptor-3.0.0.tgz#c88df52e336037e276e731cbe89c75846c1a89c9"
+  integrity sha512-xRgj9pU3Gfkl+6iBYRoXM4BdEwY4bLdL1W0tp7AjGTA7Hytv5iwmB5tvJh6K2iVszvPPYimQjLFV8jRZz3fJ1g==
+  dependencies:
+    scmp "2.0.0"
 
 slash@^1.0.0:
   version "1.0.0"

@@ -1,30 +1,50 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import GameForm from '../components/GameForm';
-import { addGuess } from '../actions/guess';
+import GameBoard from '../components/GameBoard';
+import { encryptor, npcSelectSecret } from '../utility/secret';
+import { addSinglePlayerSecret } from '../actions/game';
 
 export class SinglePlayerPage extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
+        this.state = {
+            secret: ''
+        }
     }
-    onSubmit = (guess) => {
-        this.props.addGuess(guess);
-    } 
+    componentDidMount() {
+        this.loadGame();
+    }
+    loadGame = () => {
+        if (!this.props.secret) {
+            this.startNewGame();
+        }
+    }
+    startNewGame = () => {
+        //TODO: Make these options later.
+        const difficulty = 0;
+        const secret = encryptor.encrypt(npcSelectSecret(difficulty));
+        this.setState(() => ({
+            secret
+        }));
+        this.props.addSinglePlayerSecret(secret);
+    }
     render () {
         return (
             <div>
                 <h3>SinglePlayerPage</h3>
-                <GameForm
-                    onSubmit={this.onSubmit}
-                />
+                <GameBoard />
             </div>
         );
 
     }
 };
 
-const mapDispatchToProps = (dispatch, props) => ({
-    addGuess: (guess) => dispatch(addGuess(guess))
+const mapStateToProps = (state, props) => ({
+    secret: state.game.single.secret
 });
 
-export default connect(undefined, mapDispatchToProps)(SinglePlayerPage);
+const mapDispatchToProps = (dispatch, props) => ({
+    addSinglePlayerSecret: (secret) => dispatch(addSinglePlayerSecret(secret))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SinglePlayerPage);
