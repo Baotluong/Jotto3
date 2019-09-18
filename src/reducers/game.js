@@ -1,24 +1,32 @@
 const defaultGameState = {
     single : {
         difficulty: 0,
-        secret: ''
-    },
-    versus: {
-        gameID:'',
-        secret: ''
+        secret: '',
+        guesses: []
     }
 }
 
 export default (state = defaultGameState, action) => {
     switch (action.type) {
-        case 'ADD_SINGLE_SECRET':
+        case 'ADD_SECRET':
             return {
                 ...state,
-                single: {
-                    ...state.single,
-                    secret: action.secret
+                [action.gameID]: {
+                    ...state[action.gameID],
+                    secret: action.secret,
                 }
             };
+        case 'ADD_GUESS':
+            return {
+                ...state,
+                [action.gameID]: {
+                    ...state[action.gameID],
+                    guesses: [
+                        ...state[action.gameID].guesses,
+                        action.guess
+                    ]
+                }
+            }
         default:
             return state;
     }

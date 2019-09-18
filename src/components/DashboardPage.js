@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 const DashboardPage = () => (
     <div>
         Dashboard page content
-        
-        <Link to="/single">
+
+        <Link to="/game">
             <h3>Single Player</h3>
         </Link>
         <button>Versus<span>(Real player)</span></button>
