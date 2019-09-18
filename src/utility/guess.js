@@ -7,7 +7,7 @@ export const checkForDuplicateChars = (word) => {
     });
 };
 
-export const checkForValidGuess = (guess) => {
+export const checkForValidGuess = (guess, guesses) => {
     //TODO: Turn these into options.
     const letterCount = 5;
     const allowDuplicates = false;
@@ -19,6 +19,8 @@ export const checkForValidGuess = (guess) => {
         return "Your guess has duplicate letters";
     } else if (!dictionary.hasOwnProperty(guess)) {
         return "Your guess is not a word";
+    } else if (guesses.includes(guess)) {
+        return "You've already guessed this word!";
     }
     return "";
 }

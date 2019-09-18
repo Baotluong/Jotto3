@@ -18,7 +18,7 @@ export default class GameForm extends React.Component {
     onSubmit = (e) => {
         e.preventDefault();
         const guess = this.state.guess.toLowerCase();
-        const error = checkForValidGuess(guess);
+        const error = this.props.onSubmit(guess);
         if (error) {
             this.setState(() => ({
                 error
@@ -28,7 +28,6 @@ export default class GameForm extends React.Component {
                 guess:'',
                 error:''
             }));
-            this.props.onSubmit(guess);
         }
     }
     render() {
