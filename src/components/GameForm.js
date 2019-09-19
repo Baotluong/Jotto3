@@ -1,5 +1,4 @@
 import React from 'react';
-import { checkForValidGuess } from '../utility/guess';
 
 export default class GameForm extends React.Component {
     constructor(props) {

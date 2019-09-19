@@ -10,7 +10,7 @@ export const checkForDuplicateChars = (word) => {
 export const checkForValidGuess = (guess, guesses) => {
     //TODO: Turn these into options.
     const letterCount = 5;
-    const allowDuplicates = false;
+    const allowDuplicates = true;
     if (guess.length != letterCount) {
         return "Your guess must be 5 letters long";
     } else if (!guess.match(/^[A-Za-z]+$/)) {

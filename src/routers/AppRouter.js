@@ -7,6 +7,7 @@ import LoginPage from '../components/LoginPage';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 import GamePage from '../components/GamePage';
+import SetUpPage from '../components/SetUpPage';
 
 export const history = createHistory();
 
@@ -16,6 +17,7 @@ const AppRouter = () => (
       <Switch>
         <Route path="/" component={DashboardPage} exact={true} />
         <Route path="/game/:id" component={GamePage} />
+        <Route path="/vssetup" component={SetUpPage} />
         <Route component={NotFoundPage} />
       </Switch>
     </div>

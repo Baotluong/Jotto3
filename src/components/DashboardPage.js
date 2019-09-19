@@ -8,7 +8,9 @@ const DashboardPage = () => (
         <Link to="/game/solo">
             <h3>Single Player</h3>
         </Link>
-        <button>Versus<span>(Real player)</span></button>
+        <Link to="/vssetup">
+            <h3>Versus Real Player</h3>
+        </Link>
     </div>
 );
 
