@@ -3,42 +3,43 @@ const express = require('express');
 const app = express();
 const publicPath = path.join(__dirname, '..', 'public');
 const port = process.env.PORT || 3000;
-const firebase = require('./firebase/firebase');
-const database = firebase.database;
 const bodyParser = require('body-parser');
+const dbAgent = require('./database/dbAgent');
 
 app.use(express.static(publicPath));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/api/game/:id', (req, res) => {
-  database.ref(`${req.params.id}`).once('value')
+  dbAgent.getGameByID(req.params.id)
     .then((snapshot) => {
-      res.json(snapshot.val());
+      const result = snapshot.val();
+      if (!result) {
+        throw new Error('ERROR: GameID not found.');
+      } else {
+        res.json(result);
+      }
     }).catch((e) => {
-      res.status(404).send({ error: 'Game not found' });
+      res.status(404).send(e.toString());
   });
 });
 
-app.post('/api/game/', (req, res) => {
-  database.ref('games').push({
-    test2: 'moo2'
-  }).then((ref) => {
-    res.status(201).json({ id: ref.key });
+app.post('/api/game', (req, res) => {
+  dbAgent.createGame(req.body.userID)
+  .then((newGame) => {
+    res.status(201).json(newGame);
   }).catch((e) => {
-    res.status(500).send({ error: 'Failed to create game' });
+    res.status(500).send(e.toString());
   });
 });
 
 app.put('/api/game/:id', (req, res) => {
-  database.ref(`games/${req.params.id}/guesses`).push({
-    guess: req.body.guess,
-    matches: req.body.matches
-  }).then((ref) => {
-    res.status(201).json({ ref })
-  }).catch((e) => {
-    res.status(500).send({ error: 'Failed to add guess' });
-  });
+  dbAgent.updateGameByID(req.params.id, req.body)
+    .then((ref) => {
+      res.status(201).json(ref);
+    }).catch((e) => {
+      res.status(500).send(e.toString());
+    });
 });
 
 app.get('*', (req, res) => {

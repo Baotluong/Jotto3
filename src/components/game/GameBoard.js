@@ -20,9 +20,6 @@ export class GameBoard extends React.Component {
     }
     componentDidMount() {
         this.loadGame();
-        fetch('/test')
-            .then(res => res.json())
-            .then(result => console.log(result));
     }
     loadGame = () => {
         if (!this.state.secret) {
