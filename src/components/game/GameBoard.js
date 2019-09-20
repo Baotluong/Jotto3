@@ -2,9 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import GameForm from './GameForm';
 import GuessList from './GuessList';
-import { addSecret, addGuess } from '../actions/game';
-import { encryptor, npcSelectSecret, compareGuessToSecret } from '../utility/secret';
-import { checkForValidGuess } from '../utility/guess';
+import { addSecret, addGuess } from '../../actions/game';
+import {
+    encryptor,
+    npcSelectSecret,
+    compareGuessToSecret,
+    checkForValidGuess
+} from '../../utility/gameUtilities';
 
 export class GameBoard extends React.Component {
     constructor(props){

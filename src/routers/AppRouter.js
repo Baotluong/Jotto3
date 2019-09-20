@@ -6,8 +6,8 @@ import NotFoundPage from '../components/NotFoundPage';
 import LoginPage from '../components/LoginPage';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
-import GamePage from '../components/GamePage';
-import SetUpPage from '../components/SetUpPage';
+import GamePage from '../components/Game/GamePage';
+import SetUpPage from '../components/setup/SetUpPage';
 
 export const history = createHistory();
 
