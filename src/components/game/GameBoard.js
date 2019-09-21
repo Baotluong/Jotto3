@@ -74,15 +74,18 @@ export class GameBoard extends React.Component {
 };
 
 const mapStateToProps = (state, props) => {
+    const gameData = state.game.find(game => game.gameID === props.gameID);
+    const playerNumber = gameData.players.one.userID === state.auth.uid ? 1 : 2;
     return {
         gameID: props.gameID,
-        gameData: state.game.find(game => game.gameID === props.gameID)
+        gameData,
+        playerNumber
     };
 };
 
 const mapDispatchToProps = (dispatch, props) => ({
     addGuess: (gameID, guess) => dispatch(addGuess(gameID, guess)),
-    addSecret: (gameID, secret) => dispatch(addSecret(gameID, secret))
+    addSecret: (gameID, playerNumber, secret) => dispatch(addSecret(gameID, playerNumber, secret))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameBoard);

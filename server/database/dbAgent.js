@@ -13,7 +13,7 @@ class Game {
                 userID: '',
                 secret: ''
             }
-        }
+        };
         this.guesses = [];
         this.gameOptions = {
             allowDuplicateGuesses: false
@@ -23,9 +23,9 @@ class Game {
 
 const createGame = (userID) => {
     let newGame = new Game();
+    Math.floor(Math.random() * 2) === 0  ? newGame.players.one.userID = userID : newGame.players.two.userID = userID;
     return database.ref('games').push(newGame)
         .then((ref) => {
-            Math.floor(Math.random() * 2) === 0  ? newGame.players.one.userID = userID : newGame.players.two.userID = userID;
             newGame.gameID = ref.key;
             return newGame;
         }
