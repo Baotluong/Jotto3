@@ -25,7 +25,7 @@ app.get('/api/game/:id', (req, res) => {
 });
 
 app.post('/api/game', (req, res) => {
-  dbAgent.createGame(req.body.userID)
+  dbAgent.createGame(req.body)
   .then((newGame) => {
     res.status(201).json(newGame);
   }).catch((e) => {

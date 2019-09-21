@@ -1,3 +1,5 @@
+import { npcSelectSecret, encryptor } from '../utility/gameUtilities';
+
 export const addSecret = (gameID, playerNumber, secret) => ({
     type: 'ADD_SECRET',
     gameID,
@@ -18,8 +20,13 @@ export const addGame = (game) => ({
 
 export const startSinglePlayerGame = () => {
     return (dispatch, getState) => {
-
-        const bodyData = { userID: getState().auth.uid };
+        //TODO: remove console.log
+        const secret = npcSelectSecret();
+        console.log(secret)
+        const bodyData = {
+            userID: getState().auth.uid,
+            singlePlayerSecret: encryptor.encrypt(secret)
+        };
         return fetch('/api/game', {
             method: 'POST',
             body: JSON.stringify(bodyData),

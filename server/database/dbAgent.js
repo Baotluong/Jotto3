@@ -21,15 +21,28 @@ class Game {
     }
 }
 
-const createGame = (userID) => {
-    let newGame = new Game();
-    Math.floor(Math.random() * 2) === 0  ? newGame.players.one.userID = userID : newGame.players.two.userID = userID;
-    return database.ref('games').push(newGame)
-        .then((ref) => {
-            newGame.gameID = ref.key;
-            return newGame;
-        }
-    );
+const createGame = ({ userID, singlePlayerSecret }) => {
+    let newGame = new Game();    
+    if (singlePlayerSecret) {
+        newGame.players.one.userID = userID;
+        newGame.players.two.userID = 'None';
+        newGame.players.two.secret = singlePlayerSecret;
+        return database.ref(`games/${userID}`).set(newGame)
+            .then(() => {
+                newGame.gameID = userID;
+                console.log(newGame);
+                return newGame;
+            }
+        );
+    } else {
+        Math.floor(Math.random() * 2) === 0  ? newGame.players.one.userID = userID : newGame.players.two.userID = userID;
+        return database.ref('games').push(newGame)
+            .then((ref) => {
+                newGame.gameID = ref.key;
+                return newGame;
+            }
+        );
+    }
 };
 
 const getGameByID = (gameID) => {
