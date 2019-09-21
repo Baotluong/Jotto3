@@ -4,7 +4,10 @@ import GameBoard from './GameBoard';
 export const GamePage = (props) => (
     <div>
         <h3>Game Page</h3>
-        <GameBoard gameID={props.match.params.id} />
+        <GameBoard
+            gameID={props.match.params.id}
+            {...props}
+            />
     </div>
 );
 

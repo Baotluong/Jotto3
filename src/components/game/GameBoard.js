@@ -15,29 +15,30 @@ export class GameBoard extends React.Component {
         super(props);
         this.state = {
             gameID: this.props.gameID,
-            ...this.props.gameData
+            ...this.props.gameData,
+            error: '',
+            isLoading: false,
         };
     }
     componentDidMount() {
+        // this.loadGame();
         this.loadGame();
     }
     loadGame = () => {
-        if (!this.state.secret) {
-            this.startNewGame();
-        }
-        //TODO: Do we need to do anything for continued games?
-        //Otherwise we can merge this and startNewGame
-    }
-    startNewGame = () => {
-        //TODO: Make these options later.
-        const difficulty = 0;
-        const secret = encryptor.encrypt(npcSelectSecret(difficulty));
-        //TODO: Remove this later
-        console.log(encryptor.decrypt(secret));
-        this.setState(() => ({
-            secret
-        }));
-        this.props.addSecret(this.state.gameID, secret);
+        this.setState({ isLoading: true });
+        fetch(`/api/game/${this.state.gameID}`)
+            .then(res => res.json())
+            .then(data => {
+                this.setState({ isLoading: false, ...data });
+            }).catch(e => {
+                this.setState({ isLoading: false });
+                this.props.history.push('/');
+            });
+        // if (!this.state.secret) {
+        //     this.startNewGame();
+        // }
+        // //TODO: Do we need to do anything for continued games?
+        // //Otherwise we can merge this and startNewGame
     }
     onSubmit = (guess) => {
         const error = checkForValidGuess(guess, this.state.guesses);
@@ -60,10 +61,12 @@ export class GameBoard extends React.Component {
         return error;
     } 
     render () {
+        if (this.state.isLoading) {
+            return (<p>im loading hang on</p>);
+        }
         return (
             <div>
                 <h3>Game Board</h3>
-                <GuessList gameID={this.props.gameID} />
                 <GameForm
                     onSubmit={this.onSubmit}
                 />
@@ -73,19 +76,19 @@ export class GameBoard extends React.Component {
     }
 };
 
-const mapStateToProps = (state, props) => {
-    const gameData = state.game.find(game => game.gameID === props.gameID);
-    const playerNumber = gameData.players.one.userID === state.auth.uid ? 1 : 2;
-    return {
-        gameID: props.gameID,
-        gameData,
-        playerNumber
-    };
-};
+// const mapStateToProps = (state, props) => {
+//     const gameData = state.game.find(game => game.gameID === props.gameID);
+//     const playerNumber = gameData.players.one.userID === state.auth.uid ? 1 : 2;
+//     return {
+//         gameID: props.gameID,
+//         gameData,
+//         playerNumber
+//     };
+// };
 
 const mapDispatchToProps = (dispatch, props) => ({
     addGuess: (gameID, guess) => dispatch(addGuess(gameID, guess)),
     addSecret: (gameID, playerNumber, secret) => dispatch(addSecret(gameID, playerNumber, secret))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(GameBoard);
+export default connect(undefined, mapDispatchToProps)(GameBoard);

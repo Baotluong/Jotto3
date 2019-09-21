@@ -8,8 +8,9 @@ export class DashboardPage extends React.Component {
         super(props);
     }
     onClick = () => {
-        this.props.startSinglePlayerGame();
-        this.props.history.push(`game/${this.props.userID}`);
+        this.props.startSinglePlayerGame().then(() => {
+            this.props.history.push(`game/${this.props.userID}`);
+        });
     }
     render() {
         return (

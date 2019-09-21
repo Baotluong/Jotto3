@@ -32,7 +32,7 @@ export const startSinglePlayerGame = () => {
             body: JSON.stringify(bodyData),
             headers: {
                 'Content-Type': 'application/json',
-            },
+            }
         }).then(res => {
             return res.json();
         }).then(game => {

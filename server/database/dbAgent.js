@@ -46,7 +46,17 @@ const createGame = ({ userID, singlePlayerSecret }) => {
 };
 
 const getGameByID = (gameID) => {
-    return database.ref(`games/${gameID}`).once('value');
+    return database.ref(`games/${gameID}`)
+        .once('value')
+        .then((snapshot) => {
+            const game = snapshot.val();
+            if (!game) {
+                throw new Error('ERROR: GameID not found.');
+            }
+            game.gameID = gameID;
+            return game;
+        }
+    );
 };
 
 const updateGameByID = (gameID, { guess, matches, joiningPlayerID, secretPlayerNumber, secretWord }) => {

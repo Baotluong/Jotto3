@@ -12,13 +12,9 @@ app.use(bodyParser.json());
 
 app.get('/api/game/:id', (req, res) => {
   dbAgent.getGameByID(req.params.id)
-    .then((snapshot) => {
-      const result = snapshot.val();
-      if (!result) {
-        throw new Error('ERROR: GameID not found.');
-      } else {
-        res.json(result);
-      }
+    .then((result) => {
+      res.json(result);
+      console.log(result);
     }).catch((e) => {
       res.status(404).send(e.toString());
   });

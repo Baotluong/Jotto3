@@ -16,7 +16,7 @@ const AppRouter = () => (
     <div>
       <Switch>
         <Route path="/" component={DashboardPage} exact={true} />
-        <Route path="/game/:id" component={GamePage} />
+        <PrivateRoute path="/game/:id" component={GamePage} />
         <Route path="/vssetup" component={SetUpPage} />
         <Route component={NotFoundPage} />
       </Switch>
