@@ -13,30 +13,84 @@ export const addGuess = (gameID, guessData) => ({
     guessData
 });
 
-export const addGame = (game) => ({
+export const setGame = (game) => ({
     type: 'ADD_GAME',
     game
 });
+
+export const startLoadGame = (gameID, userID) => {
+    return (dispatch) => {
+        return fetch(`/api/game/${gameID}`)
+        .then(res => {
+            if (res.status === 200){
+                return res.json();
+            } else {
+                throw new Error(res);
+            }
+        })
+        .then(game => {
+            if (!(userID === game.players.one.userID || userID === game.players.two.userID)) {
+                let playerNumber = '';
+                if (!game.players.one.userID) {
+                    playerNumber = 'one';
+                } else if (!game.players.two.userID) {
+                    playerNumber = 'two';
+                } else {
+                    throw new Error('ERROR: Game is full. You cannot join.');
+                }
+                startAddPlayer(gameID, playerNumber, userID)
+                .then(() => {
+                    dispatch(addPlayer(playerNumber, userID));
+                });
+            } 
+            dispatch(setGame(game));
+            return game;
+        });
+    } 
+};
+
+export const addPlayer = (playerNumber, userID) => ({
+    type: 'ADD_PLAYER',
+    playerNumber,
+    userID
+});
+
+export const startAddPlayer = (gameID, playerNumber, userID) => {
+    return fetch(`/api/game/${gameID}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            playerNumber,
+            userID
+        }),
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(res => {
+        if (res.status !== 200)
+            throw new Error(res);
+        return res.json();
+    });
+};
 
 export const startSinglePlayerGame = () => {
     return (dispatch, getState) => {
         //TODO: remove console.log
         const secret = npcSelectSecret();
-        console.log(secret)
-        const bodyData = {
+        console.log(secret);
+        const body = {
             userID: getState().auth.uid,
             singlePlayerSecret: encryptor.encrypt(secret)
         };
         return fetch('/api/game', {
             method: 'POST',
-            body: JSON.stringify(bodyData),
+            body: JSON.stringify(body),
             headers: {
                 'Content-Type': 'application/json',
             }
         }).then(res => {
             return res.json();
         }).then(game => {
-            dispatch(addGame(game));
+            dispatch(setGame(game));
         });
     };
-}
+};

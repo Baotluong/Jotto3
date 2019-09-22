@@ -59,15 +59,15 @@ const getGameByID = (gameID) => {
     );
 };
 
-const updateGameByID = (gameID, { guess, matches, joiningPlayerID, secretPlayerNumber, secretWord }) => {
+const updateGameByID = (gameID, { guess, matches, userID, playerNumber, secretWord }) => {
     if (guess && matches) {
         return addGuessToGame(gameID, guess, matches);
     }
-    if (joiningPlayerID) {
-        return addJoiningPlayer(gameID, joiningPlayerID);
+    if (userID && playerNumber) {
+        return addPlayer(gameID, playerNumber, userID);
     }
-    if (secretPlayerNumber && secretWord) {
-        return addSecretToGame(gameID, secretPlayerNumber, secretWord);
+    if (playerNumber && secretWord) {
+        return addSecretToGame(gameID, playerNumber, secretWord);
     }
     return Promise.reject('ERROR: No updates were made');
 };
@@ -81,25 +81,23 @@ const addGuessToGame = (gameID, guess, matches) => {
     });
 };
 
-const addJoiningPlayer = (gameID, joiningPlayerID) => {
-    return database
-        .ref(`games/${gameID}/players/`)
-        .once('value')
-        .then((snapshot) => {
-            const value = snapshot.val();
-            let joiningPlayerNumber = '';
-            if (!value) {
-                throw new Error('ERROR: GameID not found.');
-            } else if (value.one.userID && value.two.userID) {
-                throw new Error('ERROR: Game is full. You cannot join.');
-            }
-            joiningPlayerNumber = value && !value.one.userID ? 'one' : 'two';
+const addPlayer = (gameID, playerNumber, userID) => {
+    // return database
+    //     .ref(`games/${gameID}/players/`)
+    //     .once('value')
+    //     .then((snapshot) => {
+    //         const value = snapshot.val();
+    //         if (!value) {
+    //             throw new Error('ERROR: GameID not found.');
+    //         } else if (value.one.userID && value.two.userID) {
+    //             throw new Error('ERROR: Game is full. You cannot join.');
+    //         }
 
-            return database.ref(`games/${gameID}/players/${joiningPlayerNumber}/userID`).set(joiningPlayerID).then(() => {
-                return `SUCCESS: ${joiningPlayerID} has joined as player ${joiningPlayerNumber}.`;
+            return database.ref(`games/${gameID}/players/${playerNumber}/userID`).set(userID).then(() => {
+                return `SUCCESS: ${userID} has joined as player ${playerNumber}.`;
             });
-        }
-    );
+    //     }
+    // );
 }
 
 const addSecretToGame = (gameID, playerNumber, word) => {

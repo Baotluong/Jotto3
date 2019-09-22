@@ -1,5 +1,5 @@
 // // TODO: Remove this default in finished product
-// const defaultGameState = [
+// const defaultGameState = 
 //     {
 //         gameOptions : {
 //             allowDuplicateGuesses: false
@@ -16,46 +16,40 @@
 //         },
 //         gameID: "71337f4c-e57a-4277-8b4c-3a55d0cb021f",
 //         guesses: []
-//     }
-// ];
-const defaultGameState = [];
+//     };
+const defaultGameState = {};
 
 export default (state = defaultGameState, action) => {
     switch (action.type) {
         case 'ADD_GAME':
-            return [
+            return action.game;
+        case 'ADD_PLAYER':
+            return {
                 ...state,
-                action.game
-            ];
+                [state.players]: {
+                    ...state.players,
+                    [action.playerNumber]: action.userID
+                } 
+            };
         case 'ADD_SECRET':
-            return state.map((game) => {
-                if (game.gameID === action.gameID) {
-                    return {
-                        ...game,
-                        players: {
-                            ...game.players,
-                            [action.playerNumber]: {
-                                ...action.playerNumber,
-                                secret: action.secret
-                            }
-                        }
-                    };
-                } else {
-                    return game;
-                }
-            });
-        case 'ADD_GUESS':
-            return state.map((game) => {
-                if (game.gameID === action.gameID) {
-                    return {
-                        ...game,
-                        guesses: [
-                            ...game.guesses,
-                            action.guessData
-                        ]
+            return {
+                ...state,
+                players: {
+                    ...state.players,
+                    [action.playerNumber]: {
+                        ...action.playerNumber,
+                        secret: action.secret
                     }
                 }
-            });
+            };
+        case 'ADD_GUESS':
+            return {
+                ...state,
+                guesses: [
+                    ...state.guesses,
+                    action.guessData
+                ]
+            };
         default:
             return state;
     }

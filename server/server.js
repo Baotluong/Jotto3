@@ -14,7 +14,6 @@ app.get('/api/game/:id', (req, res) => {
   dbAgent.getGameByID(req.params.id)
     .then((result) => {
       res.json(result);
-      console.log(result);
     }).catch((e) => {
       res.status(404).send(e.toString());
   });
@@ -23,7 +22,7 @@ app.get('/api/game/:id', (req, res) => {
 app.post('/api/game', (req, res) => {
   dbAgent.createGame(req.body)
   .then((newGame) => {
-    res.status(201).json(newGame);
+    res.json(newGame);
   }).catch((e) => {
     res.status(500).send(e.toString());
   });
@@ -32,7 +31,7 @@ app.post('/api/game', (req, res) => {
 app.put('/api/game/:id', (req, res) => {
   dbAgent.updateGameByID(req.params.id, req.body)
     .then((ref) => {
-      res.status(201).json(ref);
+      res.json(ref);
     }).catch((e) => {
       res.status(500).send(e.toString());
     });
