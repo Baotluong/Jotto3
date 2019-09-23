@@ -58,15 +58,15 @@ const getGameByID = (gameID) => {
     );
 };
 
-const updateGameByID = (gameID, { guess, matches, userID, playerNumber, secretWord }) => {
+const updateGameByID = (gameID, { guess, matches, userID, playerNumber, secret }) => {
     if (guess && matches) {
         return addGuessToGame(gameID, guess, matches);
     }
     if (userID && playerNumber) {
         return addPlayer(gameID, playerNumber, userID);
     }
-    if (playerNumber && secretWord) {
-        return addSecretToGame(gameID, playerNumber, secretWord);
+    if (playerNumber && secret) {
+        return addSecretToGame(gameID, playerNumber, secret);
     }
     return Promise.reject('No updates were made');
 };
@@ -75,33 +75,29 @@ const addGuessToGame = (gameID, guess, matches) => {
     return database.ref(`games/${gameID}/guesses`).push({
       guess,
       matches
-    }).then(() => {
-        return `${guess} was added to game ${gameID}.`
+    }).then((ref) => {
+        console.log(ref);
+        return { guess, matches };
+    }).catch(error => {
+        return { error };
     });
 };
 
 const addPlayer = (gameID, playerNumber, userID) => {
-    // return database
-    //     .ref(`games/${gameID}/players/`)
-    //     .once('value')
-    //     .then((snapshot) => {
-    //         const value = snapshot.val();
-    //         if (!value) {
-    //             throw new Error('ERROR: GameID not found.');
-    //         } else if (value.one.userID && value.two.userID) {
-    //             throw new Error('ERROR: Game is full. You cannot join.');
-    //         }
-
-            return database.ref(`games/${gameID}/players/${playerNumber}/userID`).set(userID).then(() => {
-                return `${userID} has joined as player ${playerNumber}.`;
-            });
-    //     }
-    // );
+    return database.ref(`games/${gameID}/players/${playerNumber}/userID`).set(userID)
+    .then(() => {
+        return { playerNumber, userID };
+    }).catch(error => {
+        return { error };
+    });
 }
 
-const addSecretToGame = (gameID, playerNumber, word) => {
-    return database.ref(`games/${gameID}/players/${playerNumber}/secret`).set(word).then(() => {
-        return `Secret was added for player ${playerNumber}.`;
+const addSecretToGame = (gameID, playerNumber, secret) => {
+    return database.ref(`games/${gameID}/players/${playerNumber}/secret`).set(secret)
+    .then(() => {
+        return { playerNumber, secret };
+    }).catch(error => {
+        return { error };
     });
 }
 

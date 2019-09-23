@@ -10,6 +10,19 @@ app.use(express.static(publicPath));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+var server = app.listen(port, () => {
+  console.log('Server is up!');
+});
+
+var io = require('socket.io')(server);
+
+io.on('connection', function(socket){
+  socket.on('join', (room) => {
+    socket.join(room);
+    console.log(socket.id, ' joining ', room);
+  });
+});
+
 app.get('/api/game/:id', (req, res) => {
   dbAgent.getGameByID(req.params.id)
     .then((result) => {
@@ -30,17 +43,14 @@ app.post('/api/game', (req, res) => {
 
 app.put('/api/game/:id', (req, res) => {
   dbAgent.updateGameByID(req.params.id, req.body)
-    .then((ref) => {
-      res.json(ref);
-    }).catch((e) => {
-      res.status(500).send(e.toString());
+    .then((result) => {
+      io.sockets.in(req.params.id).emit('updates', result);
+      res.json(result);
+    }).catch((error) => {
+      res.status(500).send(error.toString());
     });
 });
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(publicPath, 'index.html'));
-});
-
-app.listen(port, () => {
-  console.log('Server is up!');
 });

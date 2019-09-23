@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import io from 'socket.io-client';
 import GameForm from './GameForm';
 import GuessList from './GuessList';
 import { addSecret, addGuess, startLoadGame } from '../../actions/game';
@@ -18,6 +19,11 @@ export class GameBoard extends React.Component {
     }
     componentDidMount() {
         this.loadGame();
+        var socket = io();
+        socket.emit('join', this.state.gameID);
+        socket.on('updates', data => {
+            console.log('players', data);
+        });
     }
     loadGame = () => {
         this.setState({ isLoading: true });

@@ -5,7 +5,7 @@ const dictionary5NoDups = require('./jsonDictionary5NoDups.json');
 const encryptorKey = 'testtesttesttest';
 export const encryptor = require('simple-encryptor')(encryptorKey);
 
-export const npcSelectSecret = (difficulty = 0) => {
+export const getFilteredDictionary = (difficulty = 0) => {
     let filteredDictionary = [];
     if (difficulty < 5) {
         for (let word in dictionary5NoDups) {
@@ -14,6 +14,11 @@ export const npcSelectSecret = (difficulty = 0) => {
             }
         }
     }
+    return filteredDictionary;
+};
+
+export const npcSelectSecret = (difficulty = 0) => {
+    const filteredDictionary = getFilteredDictionary(difficulty);
     return filteredDictionary[Math.floor(Math.random() * Math.floor(filteredDictionary.length))];
 };
 
@@ -38,7 +43,7 @@ export const checkForValidGuess = (guess, guesses) => {
     } else if (!guess.match(/^[A-Za-z]+$/)) {
         return "Your guess can only contain letters";
     } else if (!allowDuplicates 
-        && new Set(guess).size === guess.length) {
+        && new Set(guess).size !== guess.length) {
         return "Your guess has duplicate letters";
     } else if (!dictionary5.hasOwnProperty(guess)) {
         return "Your guess is not a word";
@@ -57,7 +62,7 @@ export const checkForValidSecret = (guess) => {
     } else if (!guess.match(/^[A-Za-z]+$/)) {
         return "Your guess can only contain letters";
     } else if (!allowDuplicates 
-        && new Set(guess).size === guess.length) {
+        && new Set(guess).size !== guess.length) {
         return "Your guess has duplicate letters";
     } else if (!dictionary5.hasOwnProperty(guess)) {
         return "Your guess is not a word";
