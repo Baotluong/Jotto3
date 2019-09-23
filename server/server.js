@@ -15,7 +15,7 @@ app.get('/api/game/:id', (req, res) => {
     .then((result) => {
       res.json(result);
     }).catch((e) => {
-      res.status(404).send(e.toString());
+      res.status(404).send(e.message);
   });
 });
 

@@ -22,11 +22,9 @@ export const startLoadGame = (gameID, userID) => {
     return (dispatch) => {
         return fetch(`/api/game/${gameID}`)
         .then(res => {
-            if (res.status === 200){
-                return res.json();
-            } else {
-                throw new Error(res);
-            }
+            if (!res.ok)
+                throw Error('Error: Game was not found.');
+            return res.json();
         })
         .then(game => {
             if (!(userID === game.players.one.userID || userID === game.players.two.userID)) {
@@ -36,7 +34,7 @@ export const startLoadGame = (gameID, userID) => {
                 } else if (!game.players.two.userID) {
                     playerNumber = 'two';
                 } else {
-                    throw new Error('ERROR: Game is full. You cannot join.');
+                    throw Error('Error: Game is full. You cannot join.');
                 }
                 startAddPlayer(gameID, playerNumber, userID)
                 .then(() => {
@@ -66,8 +64,8 @@ export const startAddPlayer = (gameID, playerNumber, userID) => {
             'Content-Type': 'application/json',
         }
     }).then(res => {
-        if (res.status !== 200)
-            throw new Error(res);
+        if (!res.ok)
+            throw Error('Error: Unable to add player.');
         return res.json();
     });
 };
@@ -88,6 +86,8 @@ export const startSinglePlayerGame = () => {
                 'Content-Type': 'application/json',
             }
         }).then(res => {
+            if(!res.ok)
+                throw Error('Error: Unable to start new game. Try again.');
             return res.json();
         }).then(game => {
             dispatch(setGame(game));

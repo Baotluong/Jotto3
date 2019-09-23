@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import GameForm from './GameForm';
 import GuessList from './GuessList';
-import { addSecret, addGuess, startAddPlayer, startLoadGame } from '../../actions/game';
+import { addSecret, addGuess, startLoadGame } from '../../actions/game';
+import { redirectWithError } from '../../actions/auth';
 import { compareGuessToSecret, checkForValidGuess } from '../../utility/gameUtilities';
 
 export class GameBoard extends React.Component {
@@ -21,14 +22,12 @@ export class GameBoard extends React.Component {
     loadGame = () => {
         this.setState({ isLoading: true });
         this.props.startLoadGame(this.state.gameID, this.props.userID)
-            .then(game => {
-                this.setState({ isLoading: false, ...game });
-            })
-            .catch((e) => {
-                console.log(e);
-                this.setState({ isLoading: false });
-                this.props.history.push('/');
-            });
+        .then(game => {
+            this.setState({ isLoading: false, ...game });
+        })
+        .catch((error) => {
+            this.props.redirectWithError(error.message);
+        });
     }
     onSubmit = (guess) => {
         const error = checkForValidGuess(guess, this.state.guesses);
@@ -75,7 +74,8 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = (dispatch, props) => ({
     addGuess: (gameID, guess) => dispatch(addGuess(gameID, guess)),
     addSecret: (gameID, playerNumber, secret) => dispatch(addSecret(gameID, playerNumber, secret)),
-    startLoadGame: (gameID, userID) => dispatch(startLoadGame(gameID, userID))
+    startLoadGame: (gameID, userID) => dispatch(startLoadGame(gameID, userID)),
+    redirectWithError: (error) => dispatch(redirectWithError(error))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameBoard);

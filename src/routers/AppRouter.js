@@ -8,12 +8,14 @@ import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 import GamePage from '../components/Game/GamePage';
 import SetUpPage from '../components/setup/SetUpPage';
+import Header from '../components/Header';
 
 export const history = createHistory();
 
 const AppRouter = () => (
   <Router history={history}>
     <div>
+      <Header />
       <Switch>
         <Route path="/" component={DashboardPage} exact={true} />
         <PrivateRoute path="/game/:id" component={GamePage} />

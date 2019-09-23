@@ -6,7 +6,6 @@ export const GamePage = (props) => (
         <h3>Game Page</h3>
         <GameBoard
             gameID={props.match.params.id}
-            {...props}
             />
     </div>
 );

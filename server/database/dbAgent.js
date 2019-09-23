@@ -30,7 +30,6 @@ const createGame = ({ userID, singlePlayerSecret }) => {
         return database.ref(`games/${userID}`).set(newGame)
             .then(() => {
                 newGame.gameID = userID;
-                console.log(newGame);
                 return newGame;
             }
         );
@@ -51,7 +50,7 @@ const getGameByID = (gameID) => {
         .then((snapshot) => {
             const game = snapshot.val();
             if (!game) {
-                throw new Error('ERROR: GameID not found.');
+                throw Error('GameID not found.');
             }
             game.gameID = gameID;
             return game;
@@ -69,7 +68,7 @@ const updateGameByID = (gameID, { guess, matches, userID, playerNumber, secretWo
     if (playerNumber && secretWord) {
         return addSecretToGame(gameID, playerNumber, secretWord);
     }
-    return Promise.reject('ERROR: No updates were made');
+    return Promise.reject('No updates were made');
 };
 
 const addGuessToGame = (gameID, guess, matches) => {
@@ -77,7 +76,7 @@ const addGuessToGame = (gameID, guess, matches) => {
       guess,
       matches
     }).then(() => {
-        return `SUCCESS: ${guess} was added to game ${gameID}.`
+        return `${guess} was added to game ${gameID}.`
     });
 };
 
@@ -94,7 +93,7 @@ const addPlayer = (gameID, playerNumber, userID) => {
     //         }
 
             return database.ref(`games/${gameID}/players/${playerNumber}/userID`).set(userID).then(() => {
-                return `SUCCESS: ${userID} has joined as player ${playerNumber}.`;
+                return `${userID} has joined as player ${playerNumber}.`;
             });
     //     }
     // );
@@ -102,7 +101,7 @@ const addPlayer = (gameID, playerNumber, userID) => {
 
 const addSecretToGame = (gameID, playerNumber, word) => {
     return database.ref(`games/${gameID}/players/${playerNumber}/secret`).set(word).then(() => {
-        return `SUCCESS: Secret was added for player ${playerNumber}.`;
+        return `Secret was added for player ${playerNumber}.`;
     });
 }
 

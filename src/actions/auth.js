@@ -1,4 +1,5 @@
 import { firebase, googleAuthProvider } from '../firebase/firebase';
+import { history } from '../routers/AppRouter';
 
 export const login = (uid) => ({
   type: 'LOGIN',
@@ -20,3 +21,19 @@ export const startLogout = () => {
     return firebase.auth().signOut();
   };
 };
+
+export const setError = (error) => ({
+  type: 'SET_ERROR',
+  error
+});
+
+export const redirectWithError = (error) => {
+  return async (dispatch) => {
+    await dispatch(setError(error));
+    history.push('/');
+  };
+}
+
+export const clearError = () => ({
+  type: 'CLEAR_ERROR',
+});
