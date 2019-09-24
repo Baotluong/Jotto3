@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import GameForm from './GameForm';
 import GuessList from './GuessList';
-import { addSecret, addGuess, startLoadGame } from '../../actions/game';
+import { addSecret, startAddGuess, startLoadGame } from '../../actions/game';
 import { redirectWithError } from '../../actions/auth';
 import { compareGuessToSecret, checkForValidGuess } from '../../utility/gameUtilities';
 
@@ -12,9 +12,12 @@ export class GameBoard extends React.Component {
         super(props);
         this.state = {
             gameID: this.props.gameID,
-            ...this.props.gameData,
             error: '',
             isLoading: false,
+            myPlayerNumber: '',
+            mySecret: '',
+            oppSecret: '',
+            guesses: []
         };
     }
     componentDidMount() {
@@ -29,7 +32,13 @@ export class GameBoard extends React.Component {
         this.setState({ isLoading: true });
         this.props.startLoadGame(this.state.gameID, this.props.userID)
         .then(game => {
-            this.setState({ isLoading: false, ...game });
+            this.setState({
+                isLoading: false,
+                myPlayerNumber: game.players.one.userID === this.props.userID ? 1 : 2,
+                mySecret: game.players.one.userID === this.props.userID ? game.players.one.secret : game.players.two.secret,
+                oppSecret: game.players.one.userID === this.props.userID ? game.players.two.secret : game.players.one.secret,                
+                guesses: game.guesses,
+            });
         })
         .catch((error) => {
             this.props.redirectWithError(error.message);
@@ -40,17 +49,24 @@ export class GameBoard extends React.Component {
         if (!error) {
             const guessData = {
                 guess,
-                matches: compareGuessToSecret(guess, this.state.secret)
+                matches: compareGuessToSecret(guess, this.state.oppSecret)
             };
-            this.props.addGuess(this.state.gameID, guessData);
-            this.setState(() => ({
-                guesses: [
-                    ...this.state.guesses,
-                    guessData
-                ]
-            }));
+            this.props.startAddGuess(this.state.gameID, guessData)
+            .then(() => {
+                console.log(this.state.guesses);
+                console.log(...this.state.guesses);
+                this.setState(() => ({
+                    guesses: [
+                        ...this.state.guesses,
+                        guessData
+                    ]
+                }));
+            }).catch(e => {
+                console.log(e);
+                return 'Unable to make guess. Please try again.';
+            });
             if (guessData.matches < 0){
-                return "you won";
+                return "You've won!";
             }
         }
         return error;
@@ -71,15 +87,15 @@ export class GameBoard extends React.Component {
     }
 };
 
-const mapStateToProps = (state, props) => {
+const mapStateToProps = (state) => {
     return {
         userID: state.auth.uid,
     }
 };
 
-const mapDispatchToProps = (dispatch, props) => ({
-    addGuess: (gameID, guess) => dispatch(addGuess(gameID, guess)),
-    addSecret: (gameID, playerNumber, secret) => dispatch(addSecret(gameID, playerNumber, secret)),
+const mapDispatchToProps = (dispatch) => ({
+    startAddGuess: (gameID, guessData) => dispatch(startAddGuess(gameID, guessData)),
+    addSecret: (playerNumber, secret) => dispatch(addSecret(playerNumber, secret)),
     startLoadGame: (gameID, userID) => dispatch(startLoadGame(gameID, userID)),
     redirectWithError: (error) => dispatch(redirectWithError(error))
 });

@@ -5,9 +5,9 @@ const dictionary5NoDups = require('./jsonDictionary5NoDups.json');
 const encryptorKey = 'testtesttesttest';
 export const encryptor = require('simple-encryptor')(encryptorKey);
 
-export const getFilteredDictionary = (difficulty = 0) => {
+export const getFilteredDictionary = (difficulty = 5, allowDuplicates = false) => {
     let filteredDictionary = [];
-    if (difficulty < 5) {
+    if (difficulty <= 5) {
         for (let word in dictionary5NoDups) {
             if (dictionary5NoDups[word].difficulty <= difficulty) {
                 filteredDictionary.push(word);
@@ -17,7 +17,7 @@ export const getFilteredDictionary = (difficulty = 0) => {
     return filteredDictionary;
 };
 
-export const npcSelectSecret = (difficulty = 0) => {
+export const npcSelectSecret = (difficulty = 5) => {
     const filteredDictionary = getFilteredDictionary(difficulty);
     return filteredDictionary[Math.floor(Math.random() * Math.floor(filteredDictionary.length))];
 };
@@ -34,10 +34,7 @@ export const compareGuessToSecret = (guess, secret) => {
     return matches;
 };
 
-export const checkForValidGuess = (guess, guesses) => {
-    //TODO: Turn these into options.
-    const letterCount = 5;
-    const allowDuplicates = false;
+export const checkForValidGuess = (guess, alreadyGuessed = [], difficulty = 5, allowDuplicates = false, letterCount = 5) => {
     if (guess.length != letterCount) {
         return "Your guess must be 5 letters long";
     } else if (!guess.match(/^[A-Za-z]+$/)) {
@@ -47,27 +44,24 @@ export const checkForValidGuess = (guess, guesses) => {
         return "Your guess has duplicate letters";
     } else if (!dictionary5.hasOwnProperty(guess)) {
         return "Your guess is not a word";
-    } else if (guesses.includes(guess)) {
-        return "You've already guessed this word!";
     }
+    // TODO: alreadyguess holds obj. Cant use includes, but also will need to handle modolo. Letting you guess dupes for now.
+    // else if (alreadyGuessed.length > 0 && alreadyGuessed.includes(guess)) {
+    //     return "You've already guessed this word!";
+    // }
     return "";
 }
 
-export const checkForValidSecret = (guess) => {
-    //TODO: Turn these into options.
-    const letterCount = 5;
-    const allowDuplicates = false;
-    if (guess.length != letterCount) {
-        return "Your guess must be 5 letters long";
-    } else if (!guess.match(/^[A-Za-z]+$/)) {
-        return "Your guess can only contain letters";
+export const checkForValidSecret = (secret, difficulty = 5, allowDuplicates = false, letterCount = 5) => {
+    if (secret.length != letterCount) {
+        return "Your secret must be 5 letters long";
+    } else if (!secret.match(/^[A-Za-z]+$/)) {
+        return "Your secret can only contain letters";
     } else if (!allowDuplicates 
-        && new Set(guess).size !== guess.length) {
-        return "Your guess has duplicate letters";
-    } else if (!dictionary5.hasOwnProperty(guess)) {
-        return "Your guess is not a word";
-    } else if (guesses.includes(guess)) {
-        return "You've already guessed this word!";
+        && new Set(secret).size !== secret.length) {
+        return "Your secret has duplicate letters";
+    } else if (!getFilteredDictionary(difficulty).hasOwnProperty(secret)) {
+        return "Your secret is not a word";
     }
     return "";
 }

@@ -1,17 +1,34 @@
 import { npcSelectSecret, encryptor } from '../utility/gameUtilities';
 
-export const addSecret = (gameID, playerNumber, secret) => ({
+export const addSecret = (playerNumber, secret) => ({
     type: 'ADD_SECRET',
     gameID,
     playerNumber,
     secret
 });
 
-export const addGuess = (gameID, guessData) => ({
+export const addGuess = (guessData) => ({
     type: 'ADD_GUESS',
-    gameID,
     guessData
 });
+
+export const startAddGuess = (gameID, guessData) => {
+    return (dispatch) => {
+        return fetch(`/api/game/${gameID}`, {
+            method: 'PUT',
+            body: JSON.stringify(guessData),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(res => {
+            if (!res.ok)
+                throw Error('Error: Unable to add guess.');
+            return res.json();
+        }).then(guessData => {
+            dispatch(addGuess(guessData));
+        });
+    };
+}
 
 export const setGame = (game) => ({
     type: 'ADD_GAME',
@@ -40,7 +57,7 @@ export const startLoadGame = (gameID, userID) => {
                 .then(() => {
                     dispatch(addPlayer(playerNumber, userID));
                 });
-            } 
+            }
             dispatch(setGame(game));
             return game;
         });

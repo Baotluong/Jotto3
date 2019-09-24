@@ -49,9 +49,13 @@ const getGameByID = (gameID) => {
         .once('value')
         .then((snapshot) => {
             const game = snapshot.val();
-            if (!game) {
+            if (!game)
                 throw Error('GameID not found.');
-            }
+            // This is needed because firebase won't store an empty array.
+            if (!game.guesses)
+                game.guesses = [];
+
+            game.guesses = Object.values(game.guesses);    
             game.gameID = gameID;
             return game;
         }
