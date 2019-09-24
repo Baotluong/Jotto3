@@ -87,15 +87,14 @@ export const startAddPlayer = (gameID, playerNumber, userID) => {
     });
 };
 
-export const startSinglePlayerGame = () => {
+export const startGame = (isSinglePlayer = false) => {
     return (dispatch, getState) => {
         //TODO: remove console.log
         const secret = npcSelectSecret();
         console.log(secret);
-        const body = {
-            userID: getState().auth.uid,
-            singlePlayerSecret: encryptor.encrypt(secret)
-        };
+        let body = { userID: getState().auth.uid };
+        if (isSinglePlayer)
+            body.singlePlayerSecret = encryptor.encrypt(secret);
         return fetch('/api/game', {
             method: 'POST',
             body: JSON.stringify(body),
@@ -107,7 +106,7 @@ export const startSinglePlayerGame = () => {
                 throw Error('Error: Unable to start new game. Try again.');
             return res.json();
         }).then(game => {
-            dispatch(setGame(game));
+            return game.gameID;
         });
     };
 };

@@ -36,8 +36,10 @@ export class GameBoard extends React.Component {
                 isLoading: false,
                 myPlayerNumber: game.players.one.userID === this.props.userID ? 1 : 2,
                 mySecret: game.players.one.userID === this.props.userID ? game.players.one.secret : game.players.two.secret,
-                oppSecret: game.players.one.userID === this.props.userID ? game.players.two.secret : game.players.one.secret,                
+                oppSecret: game.players.one.userID === this.props.userID ? game.players.two.secret : game.players.one.secret,
+                oppUserID: game.players.one.userID === this.props.userID ? game.players.two.userID : game.players.one.userID,               
                 guesses: game.guesses,
+                isSinglePlayer: game.players.two.userID === 'Computer'
             });
         })
         .catch((error) => {
@@ -53,8 +55,6 @@ export class GameBoard extends React.Component {
             };
             this.props.startAddGuess(this.state.gameID, guessData)
             .then(() => {
-                console.log(this.state.guesses);
-                console.log(...this.state.guesses);
                 this.setState(() => ({
                     guesses: [
                         ...this.state.guesses,

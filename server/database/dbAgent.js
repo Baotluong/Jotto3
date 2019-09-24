@@ -25,14 +25,13 @@ const createGame = ({ userID, singlePlayerSecret }) => {
     let newGame = new Game();    
     if (singlePlayerSecret) {
         newGame.players.one.userID = userID;
-        newGame.players.two.userID = 'None';
+        newGame.players.two.userID = 'Computer';
         newGame.players.two.secret = singlePlayerSecret;
         return database.ref(`games/${userID}`).set(newGame)
-            .then(() => {
-                newGame.gameID = userID;
-                return newGame;
-            }
-        );
+        .then(() => {
+            newGame.gameID = userID;
+            return newGame;
+        });
     } else {
         Math.floor(Math.random() * 2) === 0  ? newGame.players.one.userID = userID : newGame.players.two.userID = userID;
         return database.ref('games').push(newGame)
@@ -80,7 +79,6 @@ const addGuessToGame = (gameID, guess, matches) => {
       guess,
       matches
     }).then((ref) => {
-        console.log(ref);
         return { guess, matches };
     }).catch(error => {
         return { error };

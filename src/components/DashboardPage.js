@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { startSinglePlayerGame } from '../actions/game';
+import { startGame } from '../actions/game';
 import { clearError, redirectWithError } from '../actions/auth';
 
 export class DashboardPage extends React.Component {
@@ -11,10 +11,16 @@ export class DashboardPage extends React.Component {
     componentWillUnmount() {
         this.props.clearError();
     }
-    onClick = () => {
-        this.props.startSinglePlayerGame()
-        .then(() => {
-            this.props.history.push(`game/${this.props.userID}`);
+    startSinglePlayerGame = () => {
+        this.startGame(true);
+    }
+    startTwoPlayerGame = () => {
+        this.startGame(false);
+    }
+    startGame = (isSinglePlayer) => {
+        this.props.startGame(isSinglePlayer)
+        .then((gameID) => {
+            this.props.history.push(`game/${gameID}`);
         })
         .catch(error => {
             this.props.redirectWithError(error);
@@ -24,10 +30,11 @@ export class DashboardPage extends React.Component {
         return (
             <div>
                 {this.props.error && <p>{this.props.error}</p>}
-                <button onClick={this.onClick}>startSinglePlayerGame</button>
-                <Link to="/vssetup">
-                    <h3>Versus Real Player</h3>
-                </Link>
+                <button onClick={this.startSinglePlayerGame}>Start Single Player Game</button>
+                <Link to={`/game/${this.props.userID}`}>
+                    <button>Continue Single Player Game</button>
+                </Link>           
+                <button onClick={this.startTwoPlayerGame}>Versus Real Players</button>
             </div>
         )
     }
@@ -39,7 +46,7 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    startSinglePlayerGame: () => dispatch(startSinglePlayerGame()),
+    startGame: (isSinglePlayer) => dispatch(startGame(isSinglePlayer)),
     clearError: () => dispatch(clearError()),
     redirectWithError: (error) => dispatch(redirectWithError(error))
 });
