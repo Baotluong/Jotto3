@@ -75,7 +75,6 @@ export class GameBoard extends React.Component {
         this.setState({ isLoading: true });
         this.props.startLoadGame(this.state.gameID, this.props.userID)
         .then(game => {
-            console.log('game', game);
             this.setState({
                 isLoading: false,
                 myPlayerNumber: game.players.one.userID === this.props.userID ? 'one' : 'two',
@@ -85,8 +84,6 @@ export class GameBoard extends React.Component {
                 guesses: game.guesses,
                 isSinglePlayer: game.players.two.userID === 'Computer'
             });
-            console.log(this.state)
-
         })
         .catch((error) => {
             this.props.redirectWithError(error.message);
@@ -118,6 +115,13 @@ export class GameBoard extends React.Component {
         }
         return error;
     }
+    isMyTurn = () => {
+        const isGameStarted = this.state.mySecret && this.state.oppSecret;
+        const whichPlayersTurnIsIt = this.state.guesses.length % 2 === 0 ? 'one' : 'two';
+        
+        return this.state.isSinglePlayer 
+            || isGameStarted && whichPlayersTurnIsIt === this.state.myPlayerNumber; 
+    }
     render () {
         if (this.state.isLoading) {
             return <LoadingPage />;
@@ -129,6 +133,7 @@ export class GameBoard extends React.Component {
                 { (!this.state.isSinglePlayer && !this.state.mySecret) && <SecretSelector onSubmitSecret={this.onSubmitSecret}/> }
                 <GameForm
                     onSubmit={this.onSubmitGuess}
+                    isDisabled={!this.isMyTurn()}
                 />
             </div>
         );

@@ -41,8 +41,9 @@ export default class GameForm extends React.Component {
                     placeholder="Make a Guess!"
                     value={this.state.guess}
                     onChange={this.onGuessChange}
+                    disabled={this.props.isDisabled}
                 />
-                <button>Submit</button>
+                <button disabled={this.props.isDisabled}>Submit</button>
             </form>
         );
     }
