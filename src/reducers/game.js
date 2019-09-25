@@ -26,9 +26,12 @@ export default (state = defaultGameState, action) => {
         case 'ADD_PLAYER':
             return {
                 ...state,
-                [state.players]: {
+                players: {
                     ...state.players,
-                    [action.playerNumber]: action.userID
+                    [action.playerNumber]: {
+                        ...state.players[action.playerNumber],
+                        userID: action.userID
+                    }
                 } 
             };
         case 'ADD_SECRET':
@@ -37,7 +40,7 @@ export default (state = defaultGameState, action) => {
                 players: {
                     ...state.players,
                     [action.playerNumber]: {
-                        ...action.playerNumber,
+                        ...state.players[action.playerNumber],
                         secret: action.secret
                     }
                 }
@@ -47,7 +50,7 @@ export default (state = defaultGameState, action) => {
                 ...state,
                 guesses: [
                     ...state.guesses,
-                    action.guessData
+                    { guess: action.guess, matches: action.matches }
                 ]
             };
         default:

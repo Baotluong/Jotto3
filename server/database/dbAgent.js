@@ -79,7 +79,7 @@ const addGuessToGame = (gameID, guess, matches) => {
       guess,
       matches
     }).then((ref) => {
-        return { guess, matches };
+        return { action: 'ADD_GUESS', guess, matches };
     }).catch(error => {
         return { error };
     });
@@ -88,7 +88,7 @@ const addGuessToGame = (gameID, guess, matches) => {
 const addPlayer = (gameID, playerNumber, userID) => {
     return database.ref(`games/${gameID}/players/${playerNumber}/userID`).set(userID)
     .then(() => {
-        return { playerNumber, userID };
+        return { action: 'ADD_PLAYER', playerNumber, userID };
     }).catch(error => {
         return { error };
     });
@@ -97,7 +97,7 @@ const addPlayer = (gameID, playerNumber, userID) => {
 const addSecretToGame = (gameID, playerNumber, secret) => {
     return database.ref(`games/${gameID}/players/${playerNumber}/secret`).set(secret)
     .then(() => {
-        return { playerNumber, secret };
+        return { action: 'ADD_SECRET', playerNumber, secret };
     }).catch(error => {
         return { error };
     });

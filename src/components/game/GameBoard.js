@@ -2,10 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import GameForm from './GameForm';
+import GameInvitePlayer from './GameInvitePlayer';
 import GuessList from './GuessList';
-import { addSecret, startAddGuess, startLoadGame } from '../../actions/game';
+import SecretSelector from './SecretSelector';
+import LoadingPage from '../LoadingPage';
+import { startAddSecret, startLoadGame, startAddGuess, addGuess, addPlayer, addSecret } from '../../actions/game';
 import { redirectWithError } from '../../actions/auth';
-import { compareGuessToSecret, checkForValidGuess } from '../../utility/gameUtilities';
+import { compareGuessToSecret, checkForValidGuess, checkForValidSecret } from '../../utility/gameUtilities';
 
 export class GameBoard extends React.Component {
     constructor(props){
@@ -17,69 +20,115 @@ export class GameBoard extends React.Component {
             myPlayerNumber: '',
             mySecret: '',
             oppSecret: '',
-            guesses: []
+            oppUserID: '',
+            guesses: [],
+            isSinglePlayer: ''
         };
     }
     componentDidMount() {
         this.loadGame();
         var socket = io();
         socket.emit('join', this.state.gameID);
-        socket.on('updates', data => {
-            console.log('players', data);
+        socket.on('updates', updates => {
+            console.log(updates);
+            this.handleGameUpdates(updates);
         });
+    }
+    handleGameUpdates = (updates) => {
+        switch (updates.action) {
+            case 'ADD_GUESS':
+                this.props.addGuess(updates.guess, updates.matches);
+                this.setState(() => ({
+                    guesses: [
+                        ...this.state.guesses,
+                        { guess: updates.guess, matches: updates.matches }
+                    ]
+                }));
+                break;
+            case 'ADD_PLAYER':
+                this.props.addPlayer(updates.playerNumber, updates.userID);
+                if(updates.playerNumber !== this.state.myPlayerNumber) {
+                    console.log('here')
+                    this.setState(() => ({
+                        oppUserID: updates.userID,
+                    }));
+                }
+                console.log(updates.playerNumber, updates.userID);
+                break;
+            case 'ADD_SECRET':
+                this.props.addSecret(updates.playerNumber, updates.secret);
+                if (updates.playerNumber === this.state.myPlayerNumber) {
+                    this.setState(() => ({
+                        mySecret: updates.secret,
+                    }));
+                } else {
+                    this.setState(() => ({
+                        oppSecret: updates.secret,
+                    }));
+                }
+                break;
+            default:
+                console.log('Unrecognized update:', updates);
+        }
     }
     loadGame = () => {
         this.setState({ isLoading: true });
         this.props.startLoadGame(this.state.gameID, this.props.userID)
         .then(game => {
+            console.log('game', game);
             this.setState({
                 isLoading: false,
-                myPlayerNumber: game.players.one.userID === this.props.userID ? 1 : 2,
+                myPlayerNumber: game.players.one.userID === this.props.userID ? 'one' : 'two',
                 mySecret: game.players.one.userID === this.props.userID ? game.players.one.secret : game.players.two.secret,
                 oppSecret: game.players.one.userID === this.props.userID ? game.players.two.secret : game.players.one.secret,
                 oppUserID: game.players.one.userID === this.props.userID ? game.players.two.userID : game.players.one.userID,               
                 guesses: game.guesses,
                 isSinglePlayer: game.players.two.userID === 'Computer'
             });
+            console.log(this.state)
+
         })
         .catch((error) => {
             this.props.redirectWithError(error.message);
         });
     }
-    onSubmit = (guess) => {
+    onSubmitGuess = (guess) => {
         const error = checkForValidGuess(guess, this.state.guesses);
         if (!error) {
-            const guessData = {
-                guess,
-                matches: compareGuessToSecret(guess, this.state.oppSecret)
-            };
-            this.props.startAddGuess(this.state.gameID, guessData)
-            .then(() => {
-                this.setState(() => ({
-                    guesses: [
-                        ...this.state.guesses,
-                        guessData
-                    ]
-                }));
-            }).catch(e => {
+            const matches = compareGuessToSecret(guess, this.state.oppSecret);
+            this.props.startAddGuess(this.state.gameID, guess, matches)
+            .catch(e => {
                 console.log(e);
                 return 'Unable to make guess. Please try again.';
             });
-            if (guessData.matches < 0){
+            if (matches < 0){
                 return "You've won!";
             }
         }
         return error;
-    } 
+    }
+    onSubmitSecret = (secret) => {
+        const error = checkForValidSecret(secret);
+        if (!error) {
+            this.props.startAddSecret(this.state.gameID, this.state.myPlayerNumber, secret)
+            .catch(e => {
+                console.log(e);
+                return 'Unable to add secret. Please try again.';
+            });
+        }
+        return error;
+    }
     render () {
         if (this.state.isLoading) {
-            return (<p>im loading hang on</p>);
+            return <LoadingPage />;
         }
         return (
             <div>
                 <h3>Game Board</h3>
+                { !this.state.oppUserID && <GameInvitePlayer /> }
+                { (!this.state.isSinglePlayer && !this.state.mySecret) && <SecretSelector onSubmitSecret={this.onSubmitSecret}/> }
                 <GameForm
-                    onSubmit={this.onSubmit}
+                    onSubmit={this.onSubmitGuess}
                 />
             </div>
         );
@@ -94,8 +143,11 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    startAddGuess: (gameID, guessData) => dispatch(startAddGuess(gameID, guessData)),
+    startAddGuess: (gameID, guess, matches) => dispatch(startAddGuess(gameID, guess, matches)),
+    addGuess: (guess, matches) => dispatch(addGuess(guess, matches)),
+    startAddSecret: (gameID, playerNumber, secret) => dispatch(startAddSecret(gameID, playerNumber, secret)),
     addSecret: (playerNumber, secret) => dispatch(addSecret(playerNumber, secret)),
+    addPlayer: (playerNumber, userID) => dispatch(addPlayer(playerNumber, userID)),
     startLoadGame: (gameID, userID) => dispatch(startLoadGame(gameID, userID)),
     redirectWithError: (error) => dispatch(redirectWithError(error))
 });

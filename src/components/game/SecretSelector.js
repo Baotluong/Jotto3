@@ -4,20 +4,20 @@ export default class SecretSelector extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            guess: '',
+            secret: '',
             error: ''
         };
     }
-    onGuessChange = (e) => {
-        const guess = e.target.value;
+    onSecretChange = (e) => {
+        const secret = e.target.value;
         this.setState(() => ({
-            guess
+            secret
         }));
     }
-    onSubmit = (e) => {
+    onSubmitSecret = (e) => {
         e.preventDefault();
-        const guess = this.state.guess.toLowerCase();
-        const error = this.props.onSubmit(guess);
+        const secret = this.state.secret.toLowerCase();
+        const error = this.props.onSubmitSecret(secret);
         if (error) {
             this.setState(() => ({
                 error
@@ -32,15 +32,15 @@ export default class SecretSelector extends React.Component {
     render() {
         return (
             <form
-                onSubmit={this.onSubmit}
+                onSubmit={this.onSubmitSecret}
                 className="form"
             >
                 {this.state.error && <p className="form__error">{this.state.error}</p>}
                 <input
                     type="text"
                     placeholder="Select a Secret Word"
-                    value={this.state.guess}
-                    onChange={this.onGuessChange}
+                    value={this.state.secret}
+                    onChange={this.onSecretChange}
                 />
                 <button>Submit</button>
             </form>

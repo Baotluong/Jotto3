@@ -60,7 +60,7 @@ export const checkForValidSecret = (secret, difficulty = 5, allowDuplicates = fa
     } else if (!allowDuplicates 
         && new Set(secret).size !== secret.length) {
         return "Your secret has duplicate letters";
-    } else if (!getFilteredDictionary(difficulty).hasOwnProperty(secret)) {
+    } else if (!getFilteredDictionary(difficulty).includes(secret)) {
         return "Your secret is not a word";
     }
     return "";
