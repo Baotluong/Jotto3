@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import GameForm from './GameForm';
 import GameInvitePlayer from './GameInvitePlayer';
-import GuessList from './GuessList';
+import MyGuessList from './MyGuessList';
+import OppGuessList from './OppGuessList';
 import SecretSelector from './SecretSelector';
 import LoadingPage from '../LoadingPage';
 import { startAddSecret, startLoadGame, startAddGuess, addGuess, addPlayer, addSecret } from '../../actions/game';
@@ -90,7 +91,7 @@ export class GameBoard extends React.Component {
         });
     }
     onSubmitGuess = (guess) => {
-        const error = checkForValidGuess(guess, this.state.guesses);
+        const error = checkForValidGuess(guess, this.getMyGuessList());
         if (!error) {
             const matches = compareGuessToSecret(guess, this.state.oppSecret);
             this.props.startAddGuess(this.state.gameID, guess, matches)
@@ -122,6 +123,17 @@ export class GameBoard extends React.Component {
         return this.state.isSinglePlayer 
             || isGameStarted && whichPlayersTurnIsIt === this.state.myPlayerNumber; 
     }
+    getMyGuessList = () => {
+        if (this.state.isSinglePlayer)
+            return this.state.guesses;
+            
+        return this.state.guesses.filter((value, index) => index % 2 === (this.state.myPlayerNumber === 'one' ? 0 : 1));
+    }
+    getOppGuessList = () => {
+        if (this.state.isSinglePlayer)
+            return [];
+        return this.state.guesses.filter((value, index) => index % 2 === (this.state.myPlayerNumber === 'one' ? 1 : 0));
+    }
     render () {
         if (this.state.isLoading) {
             return <LoadingPage />;
@@ -129,6 +141,8 @@ export class GameBoard extends React.Component {
         return (
             <div>
                 <h3>Game Board</h3>
+                <OppGuessList guesses={ this.getOppGuessList() } />
+                <MyGuessList guesses={ this.getMyGuessList() } />
                 { !this.state.oppUserID && <GameInvitePlayer /> }
                 { (!this.state.isSinglePlayer && !this.state.mySecret) && <SecretSelector onSubmitSecret={this.onSubmitSecret}/> }
                 <GameForm

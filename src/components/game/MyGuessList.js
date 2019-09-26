@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import GuessListItem from './GuessListItem';
 
-export const GuessList = ({ guesses }) => (
+export const MyGuessList = ({ guesses }) => (
     <div>
+    <h3>My Guesses</h3>
         {
             guesses.length === 0 ? (
                 <div>
@@ -18,8 +19,4 @@ export const GuessList = ({ guesses }) => (
     </div>
 );
 
-const mapStateToProps = (state, props) => ({
-    guesses: state.game.find(game => game.gameID === props.gameID).guesses
-});
-
-export default connect(mapStateToProps)(GuessList);
+export default MyGuessList;

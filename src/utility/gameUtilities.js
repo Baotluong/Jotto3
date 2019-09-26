@@ -35,6 +35,7 @@ export const compareGuessToSecret = (guess, secret) => {
 };
 
 export const checkForValidGuess = (guess, alreadyGuessed = [], difficulty = 5, allowDuplicates = false, letterCount = 5) => {
+    console.log(alreadyGuessed)
     if (guess.length != letterCount) {
         return "Your guess must be 5 letters long";
     } else if (!guess.match(/^[A-Za-z]+$/)) {
@@ -44,11 +45,9 @@ export const checkForValidGuess = (guess, alreadyGuessed = [], difficulty = 5, a
         return "Your guess has duplicate letters";
     } else if (!dictionary5.hasOwnProperty(guess)) {
         return "Your guess is not a word";
+    } else if (alreadyGuessed.length > 0 && alreadyGuessed.some(guessData => guessData.guess === guess)) {
+        return "You've already guessed this word!";
     }
-    // TODO: alreadyguess holds obj. Cant use includes, but also will need to handle modolo. Letting you guess dupes for now.
-    // else if (alreadyGuessed.length > 0 && alreadyGuessed.includes(guess)) {
-    //     return "You've already guessed this word!";
-    // }
     return "";
 }
 
