@@ -35,7 +35,6 @@ export const compareGuessToSecret = (guess, secret) => {
 };
 
 export const checkForValidGuess = (guess, alreadyGuessed = [], difficulty = 5, allowDuplicates = false, letterCount = 5) => {
-    console.log(alreadyGuessed)
     if (guess.length != letterCount) {
         return "Your guess must be 5 letters long";
     } else if (!guess.match(/^[A-Za-z]+$/)) {

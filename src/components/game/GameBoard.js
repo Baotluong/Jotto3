@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import GameForm from './GameForm';
 import GameInvitePlayer from './GameInvitePlayer';
+import LetterTracker from './LetterTracker';
 import MyGuessList from './MyGuessList';
 import OppGuessList from './OppGuessList';
 import SecretSelector from './SecretSelector';
@@ -142,6 +143,7 @@ export class GameBoard extends React.Component {
             <div>
                 <h3>Game Board</h3>
                 <OppGuessList guesses={ this.getOppGuessList() } />
+                <LetterTracker />
                 <MyGuessList guesses={ this.getMyGuessList() } />
                 { !this.state.oppUserID && <GameInvitePlayer /> }
                 { (!this.state.isSinglePlayer && !this.state.mySecret) && <SecretSelector onSubmitSecret={this.onSubmitSecret}/> }
