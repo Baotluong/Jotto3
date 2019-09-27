@@ -4,6 +4,9 @@
   "main": "index.js",
   "author": "Bao Luong",
   "license": "MIT",
+  "engines": {
+    "node": "12.10.0"
+  },
   "scripts": {
     "build:dev": "webpack",
     "build:prod": "webpack -p --env production",
