@@ -47,6 +47,7 @@ app.put('/api/game/:id', (req, res) => {
       io.sockets.in(req.params.id).emit('updates', result);
       res.json(result);
     }).catch((error) => {
+      console.log(req.params.id, req.body);
       res.status(500).send(error.toString());
     });
 });

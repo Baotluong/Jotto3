@@ -50,12 +50,10 @@ export class GameBoard extends React.Component {
             case 'ADD_PLAYER':
                 this.props.addPlayer(updates.playerNumber, updates.userID);
                 if(updates.playerNumber !== this.state.myPlayerNumber) {
-                    console.log('here')
                     this.setState(() => ({
                         oppUserID: updates.userID,
                     }));
                 }
-                console.log(updates.playerNumber, updates.userID);
                 break;
             case 'ADD_SECRET':
                 this.props.addSecret(updates.playerNumber, updates.secret);

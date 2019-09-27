@@ -62,7 +62,7 @@ const getGameByID = (gameID) => {
 };
 
 const updateGameByID = (gameID, { guess, matches, userID, playerNumber, secret }) => {
-    if (guess && matches) {
+    if (guess && Number.isInteger(matches)) {
         return addGuessToGame(gameID, guess, matches);
     }
     if (userID && playerNumber) {
