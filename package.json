@@ -26,6 +26,7 @@
     "babel-preset-react": "6.24.1",
     "body-parser": "^1.19.0",
     "css-loader": "0.28.4",
+    "dotenv": "^8.1.0",
     "express": "4.15.4",
     "extract-text-webpack-plugin": "3.0.0",
     "firebase": "4.2.0",
@@ -54,7 +55,6 @@
   },
   "devDependencies": {
     "cross-env": "5.0.5",
-    "dotenv": "4.0.0",
     "enzyme": "2.9.1",
     "enzyme-to-json": "1.5.1",
     "jest": "20.0.4",
