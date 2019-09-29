@@ -21,6 +21,9 @@ io.on('connection', function(socket){
     socket.join(room);
     console.log(socket.id, ' joining ', room);
   });
+  socket.on('disconnect', (socket) => {
+    console.log('A user has disconnected.');
+  });
 });
 
 app.get('/api/game/:id', (req, res) => {

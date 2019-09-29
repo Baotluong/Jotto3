@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import io from 'socket.io-client';
+import io from 'socket.io-client/dist/socket.io'
 import GameForm from './GameForm';
 import GameInvitePlayer from './GameInvitePlayer';
 import LetterTracker from './LetterTracker';
@@ -26,15 +26,18 @@ export class GameBoard extends React.Component {
             guesses: [],
             isSinglePlayer: ''
         };
+        this.socket = io();
     }
     componentDidMount() {
         this.loadGame();
-        var socket = io();
-        socket.emit('join', this.state.gameID);
-        socket.on('updates', updates => {
+        this.socket.emit('join', this.state.gameID);
+        this.socket.on('updates', updates => {
             console.log(updates);
             this.handleGameUpdates(updates);
         });
+    }
+    componentWillUnmount() {
+        this.socket.disconnect();
     }
     handleGameUpdates = (updates) => {
         switch (updates.action) {
