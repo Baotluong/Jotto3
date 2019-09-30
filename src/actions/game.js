@@ -58,18 +58,23 @@ export const startLoadGame = (gameID, userID) => {
             return res.json();
         })
         .then(game => {
-            if (!(userID === game.players.one.userID || userID === game.players.two.userID)) {
-                let playerNumber = '';
-                if (!game.players.one.userID) {
-                    playerNumber = 'one';
-                } else if (!game.players.two.userID) {
-                    playerNumber = 'two';
-                } else {
-                    throw Error('Error: Game is full. You cannot join.');
-                }
+            let playerNumber = '';
+            if (userID === game.players.one.userID) {
+                playerNumber = 'one';
+            } else if (userID === game.players.two.userID) {
+                playerNumber = 'two';
+            } else if (!game.players.one.userID) {
+                playerNumber = 'one';
                 startAddNewPlayerToGame(gameID, playerNumber, userID);
-            }
+            } else if (!game.players.two.userID) {
+                playerNumber = 'two';
+                startAddNewPlayerToGame(gameID, playerNumber, userID);
+            } else {
+                throw Error('Error: Game is full. You cannot join.');
+            } 
             dispatch(setGame(game));
+            game.myPlayerNumber = playerNumber;
+            game.oppPlayerNumber = playerNumber === 'one' ? 'two' : 'one';
             return game;
         });
     } 

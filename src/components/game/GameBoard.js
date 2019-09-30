@@ -84,15 +84,10 @@ export class GameBoard extends React.Component {
         .then(game => {
             this.setState({
                 isLoading: false,
-                myPlayerNumber: 
-                    this.props.userID === game.players.one.userID
-                    ? 'one'
-                    : game.players.two.userID === this.props.userID ? 'two' : '',
-                mySecret: this.props.userID === game.players.one.userID ? game.players.one.secret : game.players.two.secret,
-                oppSecret: this.props.userID === game.players.one.userID ? game.players.two.secret : game.players.one.secret,
-                oppUserID: this.props.userID === game.players.one.userID
-                            ? game.players.two.userID
-                            : this.props.userID === game.players.two.userID ? game.players.one.userID : '',               
+                myPlayerNumber: game.myPlayerNumber,
+                mySecret: game.players[game.myPlayerNumber].secret,
+                oppSecret: game.players[game.oppPlayerNumber].secret,
+                oppUserID: game.players[game.oppPlayerNumber].userID,
                 guesses: game.guesses,
                 isSinglePlayer: game.players.two.userID === 'Computer'
             });

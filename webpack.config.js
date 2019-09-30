@@ -4,11 +4,13 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-if (process.env.NODE_ENV === 'test') {
-  require('dotenv').config({ path: '.env.test' });
-} else if (process.env.NODE_ENV === 'development') {
-  require('dotenv').config({ path: '.env.development' });
-}
+// Saving this code if I ever decide to split the environment variables
+// if (process.env.NODE_ENV === 'test') {
+//   require('dotenv').config({ path: '.env.test' });
+// } else if (process.env.NODE_ENV === 'development') {
+//   require('dotenv').config({ path: '.env.development' });
+// }
+require('dotenv').config({ path: '.env' });
 
 module.exports = (env) => {
   const isProduction = env === 'production';
@@ -46,7 +48,10 @@ module.exports = (env) => {
       }]
     },
     plugins: [
-      CSSExtract
+      CSSExtract,
+      new webpack.DefinePlugin({
+        'process.env.SECRET_ENCRYPTION_SEED': JSON.stringify(process.env.SECRET_ENCRYPTION_SEED),
+      })
     ],
     devtool: isProduction ? 'source-map' : 'inline-source-map',
     devServer: {

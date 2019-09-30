@@ -1,9 +1,8 @@
 const dictionary5 = require('./jsonDictionary5.json');
 const dictionary5NoDups = require('./jsonDictionary5NoDups.json');
 
-//TODO: move later
-const encryptorKey = 'testtesttesttest';
-export const encryptor = require('simple-encryptor')(encryptorKey);
+const something = process.env.SECRET_ENCRYPTION_SEED;
+export const encryptor = require('simple-encryptor')(something);
 
 export const getFilteredDictionary = (difficulty = 5, allowDuplicates = false) => {
     let filteredDictionary = [];
