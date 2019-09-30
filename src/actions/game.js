@@ -102,10 +102,7 @@ export const startGame = (isSinglePlayer = false) => {
     return (dispatch, getState) => {
         let body = { userID: getState().auth.uid };
         if (isSinglePlayer) {
-            //TODO: remove console.log
-            const secret = npcSelectSecret();
-            console.log(secret);
-            body.singlePlayerSecret = encryptor.encrypt(secret);
+            body.singlePlayerSecret = encryptor.encrypt(npcSelectSecret());
         }
         return fetch('/api/game', {
             method: 'POST',

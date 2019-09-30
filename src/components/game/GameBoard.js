@@ -32,7 +32,6 @@ export class GameBoard extends React.Component {
         this.loadGame();
         this.socket.emit('join', this.state.gameID);
         this.socket.on('updates', updates => {
-            console.log(updates);
             this.handleGameUpdates(updates);
         });
     }
@@ -52,9 +51,14 @@ export class GameBoard extends React.Component {
                 break;
             case 'ADD_PLAYER':
                 this.props.addPlayer(updates.playerNumber, updates.userID);
-                if(updates.playerNumber !== this.state.myPlayerNumber) {
+                if (updates.userID === this.props.userID) {
                     this.setState(() => ({
-                        oppUserID: updates.userID,
+                        myPlayerNumber: updates.playerNumber,
+                        oppUserID: updates.oppUserID
+                    }));
+                } else {
+                    this.setState(() => ({
+                        oppUserID: updates.userID
                     }));
                 }
                 break;
@@ -80,10 +84,15 @@ export class GameBoard extends React.Component {
         .then(game => {
             this.setState({
                 isLoading: false,
-                myPlayerNumber: game.players.one.userID === this.props.userID ? 'one' : 'two',
-                mySecret: game.players.one.userID === this.props.userID ? game.players.one.secret : game.players.two.secret,
-                oppSecret: game.players.one.userID === this.props.userID ? game.players.two.secret : game.players.one.secret,
-                oppUserID: game.players.one.userID === this.props.userID ? game.players.two.userID : game.players.one.userID,               
+                myPlayerNumber: 
+                    this.props.userID === game.players.one.userID
+                    ? 'one'
+                    : game.players.two.userID === this.props.userID ? 'two' : '',
+                mySecret: this.props.userID === game.players.one.userID ? game.players.one.secret : game.players.two.secret,
+                oppSecret: this.props.userID === game.players.one.userID ? game.players.two.secret : game.players.one.secret,
+                oppUserID: this.props.userID === game.players.one.userID
+                            ? game.players.two.userID
+                            : this.props.userID === game.players.two.userID ? game.players.one.userID : '',               
                 guesses: game.guesses,
                 isSinglePlayer: game.players.two.userID === 'Computer'
             });

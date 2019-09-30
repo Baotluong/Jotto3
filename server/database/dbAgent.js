@@ -87,8 +87,14 @@ const addGuessToGame = (gameID, guess, matches) => {
 
 const addPlayer = (gameID, playerNumber, userID) => {
     return database.ref(`games/${gameID}/players/${playerNumber}/userID`).set(userID)
-    .then(() => {
-        return { action: 'ADD_PLAYER', playerNumber, userID };
+    .then((ref) => {
+        const opponentPlayerNumber = playerNumber === 'one' ? 'two' : 'one';
+        return database.ref(`games/${gameID}/players/${opponentPlayerNumber}/userID`)
+            .once('value')
+            .then(snapshot => {
+                const oppUserID = snapshot.val();
+                return { action: 'ADD_PLAYER', playerNumber, userID, oppUserID };
+            });
     }).catch(error => {
         return { error };
     });
