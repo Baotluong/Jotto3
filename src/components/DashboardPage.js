@@ -33,21 +33,21 @@ export class DashboardPage extends React.Component {
                     {this.props.error && <p className="dashboard__error">{this.props.error}</p>}
                     <button 
                         onClick={this.startTwoPlayerGame}
-                        className="button dashboard__button"
+                        className="button dashboard__button dashboard__button__versus"
                     >
-                        Versus Real Players
+                        (2P) Play with a Friend!
                     </button>
                     <button 
                         onClick={this.startSinglePlayerGame}
                         className="button dashboard__button"
                     >
-                        Single Player Start
+                        (1P) Start New Game
                     </button>
                     <Link to={`/game/${this.props.userID}`}>
                         <button
                             className="button dashboard__button"
                         >
-                            Continue Single Player
+                            (1P) Continue Game
                         </button>
                     </Link>           
                 </div> 

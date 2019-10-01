@@ -13,9 +13,14 @@
 	font-family:Arial;
     font-weight:bold;
     color: $dark-grey;
+    border-radius: 1rem;
 }
 .dashboard__button:hover {
-	background-color: darken($color: $ice, $amount: 10%);
+	background-color: darken($color: $ice, $amount: 20%);
+}
+
+.dashboard__button__versus {
+    background-color: darken($color: $ice, $amount: 10%)
 }
 
 .dashboard__error {
