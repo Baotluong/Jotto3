@@ -1,16 +1,52 @@
-.text-input {
-  border: 1px solid #cacccd;
-  height: 50px;
-  font-size: $font-size-large;
-  font-weight: 300;
+.input__box {
+  display: flex;
+  padding: $m-size;
+  flex-direction: column;
+}
+
+.input__input {
+  flex-grow: 1;
+  background: $warm-grey;
+  border: none;
+  margin: 0 0 $s-size 0;
   padding: $s-size;
+  font-size: $font-size-medium;
 }
 
-.select {
-  @extend .text-input;
+.input__button {
+  font-size: $font-size-large;
+  background: $ice;
+  font-weight: 600;
+  padding: 0 1rem;
 }
 
-.textarea {
-  @extend .text-input;
-  height: 10rem;
+.input__button:hover {
+  background: darken($color: $ice, $amount: 20%);
+}
+
+.input__copy:hover {
+  cursor: pointer;
+}
+
+.input_copy:active {
+	position:relative;
+	top:1px;
+}
+
+.input__instruction {
+  font-style: italic;
+}
+
+@media (min-width: $desktop-breakpoint) {
+  .input__box {
+      flex-direction: row;
+  }
+
+  .input__input {
+      margin: 0 $s-size 0 0;
+  }
+
+  .input__button {
+    font-size: $font-size-medium;
+  }
 }

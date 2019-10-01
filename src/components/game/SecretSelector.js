@@ -31,19 +31,23 @@ export default class SecretSelector extends React.Component {
     }
     render() {
         return (
-            <form
-                onSubmit={this.onSubmitSecret}
-                className="form"
-            >
-                {this.state.error && <p className="form__error">{this.state.error}</p>}
-                <input
-                    type="text"
-                    placeholder="Select a Secret Word"
-                    value={this.state.secret}
-                    onChange={this.onSecretChange}
-                />
-                <button>Submit</button>
-            </form>
+            <div>
+                <div className="input__instructions">Submit your 5-letter sercret word. It cannot contain duplicates.</div>
+                <form
+                    onSubmit={this.onSubmitSecret}
+                    className="input__box"
+                >
+                    {this.state.error && <div className="form__error">{this.state.error}</div>}
+                    <input
+                        className="input__input"
+                        type="text"
+                        placeholder="Keep it fun! Don't pick something too hard!"
+                        value={this.state.secret}
+                        onChange={this.onSecretChange}
+                    />
+                    <button className="button input__button">Submit</button>
+                </form>
+            </div>
         );
     }
 };

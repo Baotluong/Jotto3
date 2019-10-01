@@ -122,12 +122,13 @@ export class GameBoard extends React.Component {
         }
         return error;
     }
+    isGameStarted = () => {
+        return this.state.isSinglePlayer || (this.state.mySecret && this.state.oppSecret);
+    }
     isMyTurn = () => {
-        const isGameStarted = this.state.mySecret && this.state.oppSecret;
         const whichPlayersTurnIsIt = this.state.guesses.length % 2 === 0 ? 'one' : 'two';
         
-        return this.state.isSinglePlayer 
-            || isGameStarted && whichPlayersTurnIsIt === this.state.myPlayerNumber; 
+        return this.isGameStarted && whichPlayersTurnIsIt === this.state.myPlayerNumber; 
     }
     getMyGuessList = () => {
         if (this.state.isSinglePlayer)
@@ -145,17 +146,27 @@ export class GameBoard extends React.Component {
             return <LoadingPage />;
         }
         return (
-            <div>
-                <h3>Game Board</h3>
-                <OppGuessList guesses={ this.getOppGuessList() } />
-                <LetterTracker />
-                <MyGuessList guesses={ this.getMyGuessList() } />
+            <div className="content-container">
+                { this.isGameStarted() &&
+                    <div className="game__guesses">
+                        <OppGuessList guesses={ this.getOppGuessList() } />
+                        <LetterTracker />
+                        <MyGuessList guesses={ this.getMyGuessList() } />
+                    </div>
+                }
                 { !this.state.oppUserID && <GameInvitePlayer /> }
                 { (!this.state.isSinglePlayer && !this.state.mySecret) && <SecretSelector onSubmitSecret={this.onSubmitSecret}/> }
-                <GameForm
-                    onSubmit={this.onSubmitGuess}
-                    isDisabled={!this.isMyTurn()}
-                />
+                { this.isGameStarted() &&
+                    <GameForm
+                        onSubmit={this.onSubmitGuess}
+                        isDisabled={!this.isMyTurn()}
+                    />
+                }
+                { !this.isGameStarted() && this.state.mySecret && this.state.oppUserID && 
+                    <div className="gameboard__waiting-message">
+                        Waiting on your opponent... zzz...
+                    </div>
+                }
             </div>
         );
 

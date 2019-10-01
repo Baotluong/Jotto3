@@ -1,6 +1,8 @@
 .button {
   text-decoration: none;
   border: none;
+  color: $dark-grey;
+	cursor:pointer;
 }
 
 .button:active {
