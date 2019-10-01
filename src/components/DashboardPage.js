@@ -28,13 +28,29 @@ export class DashboardPage extends React.Component {
     }
     render() {
         return (
-            <div>
-                {this.props.error && <p>{this.props.error}</p>}
-                <button onClick={this.startSinglePlayerGame}>Start Single Player Game</button>
-                <Link to={`/game/${this.props.userID}`}>
-                    <button>Continue Single Player Game</button>
-                </Link>           
-                <button onClick={this.startTwoPlayerGame}>Versus Real Players</button>
+            <div className="content-container">
+                <div className="dashboard__buttons">
+                    {this.props.error && <p className="dashboard__error">{this.props.error}</p>}
+                    <button 
+                        onClick={this.startTwoPlayerGame}
+                        className="button dashboard__button"
+                    >
+                        Versus Real Players
+                    </button>
+                    <button 
+                        onClick={this.startSinglePlayerGame}
+                        className="button dashboard__button"
+                    >
+                        Single Player Start
+                    </button>
+                    <Link to={`/game/${this.props.userID}`}>
+                        <button
+                            className="button dashboard__button"
+                        >
+                            Continue Single Player
+                        </button>
+                    </Link>           
+                </div> 
             </div>
         )
     }

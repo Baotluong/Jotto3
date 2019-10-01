@@ -8,7 +8,7 @@ export const Header = ({ startLogout }) => (
     <div className="content-container">
       <div className="header__content">
         <Link className="header__title" to="/">
-          <h1>Jotto</h1>
+          <h1><span className="header__question-mark">?</span>JOTTO</h1>
         </Link>
       </div>
     </div>

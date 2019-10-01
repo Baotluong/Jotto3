@@ -1,0 +1,27 @@
+.dashboard__buttons {
+    margin: $l-size $m-size 0 $m-size;
+}
+
+.dashboard__button {
+    padding: $m-size;
+    width: 100%;
+    margin-bottom: $m-size;
+    font-size: 2.5rem;
+	background-color: $ice;
+	display:inline-block;
+	cursor:pointer;
+	font-family:Arial;
+    font-weight:bold;
+    color: $dark-grey;
+}
+.dashboard__button:hover {
+	background-color: darken($color: $ice, $amount: 10%);
+}
+
+.dashboard__error {
+    background: $warm-grey;
+    color: #D93A32;
+    padding-left: 1.2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
