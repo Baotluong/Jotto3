@@ -1,0 +1,27 @@
+.guess-list-item__box {
+    width: 33%;
+}
+
+.guess-list-item__guess {
+
+}
+
+.guess-list-item__matches {
+    border-radius: 100%;
+    padding: 0.065rem 0.5rem;
+    border: solid 0.11rem $dark-grey;
+    font-weight: 600;
+}
+
+.guess-list-item__matches--winner {
+    @extend .guess-list-item__matches;
+    padding: 0.09rem 0.215rem;
+    background: $dark-grey;
+    color: $overcast;
+}
+
+@media (min-width: $desktop-breakpoint) {
+    .guess-list-item__box {
+        width: 25%;
+    }
+}

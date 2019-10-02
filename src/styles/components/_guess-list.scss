@@ -1,0 +1,20 @@
+.guess-list__box {
+    margin: 0 0 $s-size 0;
+}
+
+.guess-list__guess-row {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 $s-size;
+}
+
+.guess-list__title-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.guess-list__title {
+    margin: 0;
+    font-size: $font-size-medium;
+    font-weight: 300;
+}

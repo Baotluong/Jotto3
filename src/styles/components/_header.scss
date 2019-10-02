@@ -7,7 +7,7 @@
   display: flex;
   justify-content: space-between;
   padding: $s-size 0;
-  margin-bottom: $l-size;
+  margin-bottom: $s-size;
 }
 
 .header__title {
@@ -16,11 +16,6 @@
   h1 {
     margin: 0;
     font-size: 3.5rem;
-  }
-  h3 {
-    font-size: 1.7rem;
-    margin: 0;
-    font-style: italic;
   }
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import Popup from "reactjs-popup";
+import LetterTrackerPopUp from './LetterTrackerPopUp';
 
 export class LetterTracker extends React.Component {
     constructor(props) {
@@ -49,22 +49,7 @@ export class LetterTracker extends React.Component {
                 <div className="letter-tracker__box">
                     <div className="letter-tracker__title-row">
                         <span>Letter Tracker</span>
-                        <Popup
-                            trigger={open => (
-                                <button className="button"><span className="info-icon">&#x1F6C8;</span></button>
-                            )}
-                            position="right center"
-                            closeOnDocumentClick
-                            >
-                            <div>
-                                Click letters to change colors<br/>
-                                <div className="popup-span maybe">Maybe</div>
-                                <div className="popup-span definitely">Definitely</div>
-                                <div className="popup-span definitely-not">Definitely Not</div>
-                                Definitely letters appear below<br />
-                                Click to shuffle them!
-                            </div>
-                        </Popup>
+                        <LetterTrackerPopUp />
                     </div>
                     <div className="letter-tracker__letter-rows">
                         { this.state.lettersArray.map(letterData => {

@@ -31,23 +31,27 @@ export default class GameForm extends React.Component {
     }
     render() {
         return (
-            <form
+            <div>
+                {this.state.error && <p className="input__error">{this.state.error}</p>}
+                <form
                 onSubmit={this.onSubmit}
                 className="input__box"
             >
-                {this.state.error && <p className="input__error">{this.state.error}</p>}
                 <input
                     className="input__input"
                     type="text"
-                    placeholder="Take a guess! See how many letters you get correct."
+                    placeholder={this.props.isDisabled 
+                        ? "It's your opponent's turn!"
+                        : "Enter a 5 letter word. See how many are right."}
                     value={this.state.guess}
                     onChange={this.onGuessChange}
                     disabled={this.props.isDisabled}
                 />
                 <button disabled={this.props.isDisabled} className="button input__button">
-                    Guess!
+                    {this.props.isDisabled ? "Waiting..." : "Guess!"}
                 </button>
             </form>
+            </div>          
         );
     }
 }   

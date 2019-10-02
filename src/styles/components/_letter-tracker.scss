@@ -1,20 +1,21 @@
 .letter-tracker__button {
     // 100% / 9
     width: 11.1111%;
-    font-size: 2.75rem;
+    font-size: $font-size-large;
     font-weight: 300;
 }
 
 .letter-tracker__box {
     background: $warm-grey;
     padding: $s-size;
+    margin-bottom: $s-size;
 }
 
 .letter-tracker__letter-rows {
-    background: $overcast;
+    background: $ice;
     margin-bottom: $s-size;
     .unknown {
-        background: transparent;
+        background: $ice;
     }
     .maybe {
         background: $status-maybe;
@@ -38,9 +39,9 @@
 }
 
 .letter-tracker__title-row {
-    display: flexbox;
-    justify-content: space-evenly;
-    font-size: 1.9rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: $font-size-medium;
 }
 
 @media (min-width: $desktop-breakpoint) {

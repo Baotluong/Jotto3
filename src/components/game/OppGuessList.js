@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import GuessListItem from './GuessListItem';
 
 export const OppGuessList = ({ guesses }) => (
@@ -7,11 +6,13 @@ export const OppGuessList = ({ guesses }) => (
         {   
             guesses.length !== 0 &&
             (
-                <div>
-                    <h3>Opponent's Guesses</h3>
-                    { guesses.map((guessData) => {
-                        return <GuessListItem key={guessData.guess} guess={guessData.guess} matches={guessData.matches}/>;
-                    })}
+                <div className="guess-list__box">
+                    <h3 className="guess-list__title">Opponent Guesses</h3>
+                    <div className="guess-list__guess-row">
+                        { guesses.map((guessData) => {
+                            return <GuessListItem key={guessData.guess} guess={guessData.guess} matches={guessData.matches}/>;
+                        })}
+                    </div>
                 </div>
             )
         }

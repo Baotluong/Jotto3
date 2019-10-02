@@ -1,8 +1,11 @@
 import React from 'react';
 
 const GuessListItem = ({ guess, matches }) => (
-    <div>
-        <h3>{guess} - {matches >= 0 ? matches : 'Winner'}</h3>
+    <div className="guess-list-item__box">
+            <span className="guess-list-item__guess">{guess.toUpperCase()} - </span>
+            <span className={matches >= 0 ? "guess-list-item__matches" : "guess-list-item__matches--winner"}>
+                {matches >= 0 ? matches : 'W'}
+            </span>
     </div>
 );
 

@@ -10,7 +10,7 @@
   border: none;
   margin: 0 0 $s-size 0;
   padding: $s-size;
-  font-size: $font-size-medium;
+  font-size: $font-size-small;
 }
 
 .input__button {
@@ -39,8 +39,12 @@
 }
 
 .input__error {
-  margin: 0 0 $m-size 0;
   font-style: italic;
+}
+
+.input__button:disabled {
+  color: white;
+  background: $grey;
 }
 
 @media (min-width: $desktop-breakpoint) {
@@ -53,6 +57,6 @@
   }
 
   .input__button {
-    font-size: $font-size-medium;
+    font-size: $font-size-small;
   }
 }

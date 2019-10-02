@@ -9,7 +9,6 @@ export const Header = ({ startLogout }) => (
       <div className="header__content">
         <Link className="header__title" to="/">
           <h1><span className="header__question-mark">?</span>JOTTO</h1>
-          <h3>Take your best guess</h3> 
         </Link>
       </div>
     </div>
