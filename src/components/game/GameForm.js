@@ -33,17 +33,20 @@ export default class GameForm extends React.Component {
         return (
             <form
                 onSubmit={this.onSubmit}
-                className="form"
+                className="input__box"
             >
-                {this.state.error && <p className="form__error">{this.state.error}</p>}
+                {this.state.error && <p className="input__error">{this.state.error}</p>}
                 <input
+                    className="input__input"
                     type="text"
-                    placeholder="Make a Guess!"
+                    placeholder="Take a guess! See how many letters you get correct."
                     value={this.state.guess}
                     onChange={this.onGuessChange}
                     disabled={this.props.isDisabled}
                 />
-                <button disabled={this.props.isDisabled}>Submit</button>
+                <button disabled={this.props.isDisabled} className="button input__button">
+                    Guess!
+                </button>
             </form>
         );
     }

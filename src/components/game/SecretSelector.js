@@ -37,7 +37,7 @@ export default class SecretSelector extends React.Component {
                     onSubmit={this.onSubmitSecret}
                     className="input__box"
                 >
-                    {this.state.error && <div className="form__error">{this.state.error}</div>}
+                    {this.state.error && <div className="input__error">{this.state.error}</div>}
                     <input
                         className="input__input"
                         type="text"
