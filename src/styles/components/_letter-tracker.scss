@@ -1,0 +1,51 @@
+.letter-tracker__button {
+    // 100% / 9
+    width: 11.1111%;
+    font-size: 2.75rem;
+    font-weight: 300;
+}
+
+.letter-tracker__box {
+    background: $warm-grey;
+    padding: $s-size;
+}
+
+.letter-tracker__letter-rows {
+    background: $overcast;
+    margin-bottom: $s-size;
+    .unknown {
+        background: transparent;
+    }
+    .maybe {
+        background: $status-maybe;
+    }
+    .definitely {
+        background: $status-definitely;
+    }
+    .definitelyNot {
+        background: $status-definitelyNot;
+    }
+}
+
+.letter-tracker__shuffle-row {
+    border-top: solid 1px white;
+    padding-top: 1rem;
+}
+
+.letter-tracker__shuffle-button {
+    font-size: 2rem;
+    background: $overcast;
+}
+
+.letter-tracker__title-row {
+    display: flexbox;
+    justify-content: space-evenly;
+    font-size: 1.9rem;
+}
+
+@media (min-width: $desktop-breakpoint) {
+    .letter-tracker__button {
+        // 100% / 13
+        width: 7.6923%;
+    }
+}

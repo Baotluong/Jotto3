@@ -128,7 +128,8 @@ export class GameBoard extends React.Component {
     isMyTurn = () => {
         const whichPlayersTurnIsIt = this.state.guesses.length % 2 === 0 ? 'one' : 'two';
         
-        return this.isGameStarted && whichPlayersTurnIsIt === this.state.myPlayerNumber; 
+        return this.state.isSinglePlayer || 
+            (this.isGameStarted && whichPlayersTurnIsIt === this.state.myPlayerNumber); 
     }
     getMyGuessList = () => {
         if (this.state.isSinglePlayer)

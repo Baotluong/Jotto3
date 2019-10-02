@@ -1,0 +1,23 @@
+.info-icon {
+    color: $glacier-blue;
+    font-weight: 600;
+}
+
+.popup-content {
+    width: auto;
+    font-size: 1.4rem;
+    color: $dark-grey;
+    background: $off-white;
+    .maybe {
+        background: $status-maybe;
+    }
+    .definitely {
+        background: $status-definitely;
+    }
+    .definitely-not {
+        background: $status-definitelyNot;
+    }
+    .popup-span {
+        text-align: center;
+    }
+}  

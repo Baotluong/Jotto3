@@ -1,4 +1,5 @@
 import React from 'react';
+import Popup from "reactjs-popup";
 
 export class LetterTracker extends React.Component {
     constructor(props) {
@@ -45,35 +46,44 @@ export class LetterTracker extends React.Component {
     render () {
         return (
             <div>
-                <h3>Letter Tracker</h3>
-                <div>
-                    { this.state.lettersArray.slice(0, 13).map(letterData => {
-                        return <button
-                                className={ this.state.lettersArray.find(letter => letter.letter === letterData.letter).status }
-                                onClick={() => { this.changeAlphabetClass(letterData.letter) }}
-                                key={letterData.letter}
-                                >
-                                    {letterData.letter}
-                                </button>
-                    })}
-                </div>
-                <div>
-                    { this.state.lettersArray.slice(13, 26).map(letterData => {
-                        return <button
-                                className={ this.state.lettersArray.find(letter => letter.letter === letterData.letter).status }
-                                onClick={() => { this.changeAlphabetClass(letterData.letter) }}
-                                key={letterData.letter}
-                                >
-                                    {letterData.letter}
-                                </button>
-                        
-                    })}
-                </div>
+                <div className="letter-tracker__box">
+                    <div className="letter-tracker__title-row">
+                        <span>Letter Tracker</span>
+                        <Popup
+                            trigger={open => (
+                                <button className="button"><span className="info-icon">&#x1F6C8;</span></button>
+                            )}
+                            position="right center"
+                            closeOnDocumentClick
+                            >
+                            <div>
+                                Click letters to change colors<br/>
+                                <div className="popup-span maybe">Maybe</div>
+                                <div className="popup-span definitely">Definitely</div>
+                                <div className="popup-span definitely-not">Definitely Not</div>
+                                Definitely letters appear below<br />
+                                Click to shuffle them!
+                            </div>
+                        </Popup>
+                    </div>
+                    <div className="letter-tracker__letter-rows">
+                        { this.state.lettersArray.map(letterData => {
+                            return <button
+                                    className={"button letter-tracker__button "
+                                        + this.state.lettersArray.find(letter => letter.letter === letterData.letter).status }
+                                    onClick={() => { this.changeAlphabetClass(letterData.letter) }}
+                                    key={letterData.letter}
+                                    >
+                                        {letterData.letter}
+                                    </button>
+                        })}
+                    </div>
                 {
                     this.state.definitelyLettersArray.length > 0 && 
-                    (<div>
+                    (<div className="letter-tracker__shuffle-row">
                         { this.state.definitelyLettersArray.map(letterData => {
                             return <button
+                                className={"button letter-tracker__shuffle-button"}
                                 key={letterData.letter}
                                 onClick={this.handleShuffleLettersClick}
                             >
@@ -82,6 +92,7 @@ export class LetterTracker extends React.Component {
                         })}
                     </div>)
                 }
+                </div>
             </div>
         );
     }
