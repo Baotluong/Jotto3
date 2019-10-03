@@ -18,6 +18,9 @@ export const getFilteredDictionary = (difficulty = 5, allowDuplicates = false) =
 
 export const npcSelectSecret = (difficulty = 5) => {
     const filteredDictionary = getFilteredDictionary(difficulty);
+    // const secret = filteredDictionary[Math.floor(Math.random() * Math.floor(filteredDictionary.length))];
+    // console.log(secret);
+    // return secret;
     return filteredDictionary[Math.floor(Math.random() * Math.floor(filteredDictionary.length))];
 };
 

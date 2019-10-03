@@ -7,10 +7,11 @@ import LetterTracker from './LetterTracker';
 import MyGuessList from './MyGuessList';
 import OppGuessList from './OppGuessList';
 import SecretSelector from './SecretSelector';
+import WinModal from './WinModal';
 import LoadingPage from '../LoadingPage';
 import { startAddSecret, startLoadGame, startAddGuess, addGuess, addPlayer, addSecret } from '../../actions/game';
 import { redirectWithError } from '../../actions/auth';
-import { compareGuessToSecret, checkForValidGuess, checkForValidSecret } from '../../utility/gameUtilities';
+import { compareGuessToSecret, checkForValidGuess, checkForValidSecret, encryptor } from '../../utility/gameUtilities';
 
 export class GameBoard extends React.Component {
     constructor(props){
@@ -24,7 +25,10 @@ export class GameBoard extends React.Component {
             oppSecret: '',
             oppUserID: '',
             guesses: [],
-            isSinglePlayer: ''
+            isSinglePlayer: '',
+            showWinModal: false,
+            showLossModal: false,
+            isGameOver: false
         };
         this.socket = io();
     }
@@ -41,12 +45,28 @@ export class GameBoard extends React.Component {
     handleGameUpdates = (updates) => {
         switch (updates.action) {
             case 'ADD_GUESS':
+                let showWinModal = false;
+                let showLossModal = false;
+                let isGameOver = false;
+                if (updates.matches < 0) {
+                    const whichPlayerWon = this.state.isSinglePlayer || this.state.guesses.length % 2 === 0 ? 'one' : 'two';
+                    const didIWin = whichPlayerWon === this.state.myPlayerNumber;
+                    if (didIWin) {
+                        showWinModal = true;
+                    }  else {
+                        showLossModal = true;
+                    }
+                    isGameOver = true;
+                }
                 this.props.addGuess(updates.guess, updates.matches);
                 this.setState(() => ({
                     guesses: [
                         ...this.state.guesses,
                         { guess: updates.guess, matches: updates.matches }
-                    ]
+                    ],
+                    showWinModal,
+                    showLossModal,
+                    isGameOver
                 }));
                 break;
             case 'ADD_PLAYER':
@@ -105,9 +125,6 @@ export class GameBoard extends React.Component {
                 console.log(e);
                 return 'Unable to make guess. Please try again.';
             });
-            if (matches < 0){
-                return "You've won!";
-            }
         }
         return error;
     }
@@ -121,6 +138,12 @@ export class GameBoard extends React.Component {
             });
         }
         return error;
+    }
+    handleClearShowModal = () => {
+        this.setState(() => ({
+            showWinModal: undefined,
+            showLossModal: undefined,
+        }));
     }
     isGameStarted = () => {
         return this.state.isSinglePlayer || (this.state.mySecret && this.state.oppSecret);
@@ -157,7 +180,7 @@ export class GameBoard extends React.Component {
                 }
                 { !this.state.oppUserID && <GameInvitePlayer /> }
                 { (!this.state.isSinglePlayer && !this.state.mySecret) && <SecretSelector onSubmitSecret={this.onSubmitSecret}/> }
-                { this.isGameStarted() &&
+                { (this.isGameStarted() && !this.state.isGameOver) &&
                     <GameForm
                         onSubmit={this.onSubmitGuess}
                         isDisabled={!this.isMyTurn()}
@@ -165,8 +188,17 @@ export class GameBoard extends React.Component {
                 }
                 { !this.isGameStarted() && this.state.mySecret && this.state.oppUserID && 
                     <div className="gameboard__waiting-message">
-                        Waiting on your opponent... zzz...
+                        Waiting on your opponent...
                     </div>
+                }
+                { this.state.isGameOver &&
+                    <WinModal
+                        showWinModal={this.state.showWinModal}
+                        showLossModal={this.state.showLossModal}
+                        oppSecret={encryptor.decrypt(this.state.oppSecret)}
+                        handleClearShowModal={this.handleClearShowModal}
+                        numberOfTries={this.state.isSinglePlayer ? this.state.guesses.length : Math.ceil(this.state.guesses.length / 2)}
+                    />
                 }
             </div>
         );
