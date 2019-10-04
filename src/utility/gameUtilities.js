@@ -1,5 +1,7 @@
 const dictionary5 = require('./jsonDictionary5.json');
 const dictionary5NoDups = require('./jsonDictionary5NoDups.json');
+// Feature: Temporary solution is to make easier dictionaries until can make difficulty a thing.
+const easyDictionary5NoDups = require('./jsonEasyDictionary5NoDups.json');
 
 const something = process.env.SECRET_ENCRYPTION_SEED;
 export const encryptor = require('simple-encryptor')(something);
@@ -16,8 +18,17 @@ export const getFilteredDictionary = (difficulty = 5, allowDuplicates = false) =
     return filteredDictionary;
 };
 
+export const getEasyFilteredDictionary = () => {
+    let filteredDictionary = [];
+    for (let word in easyDictionary5NoDups) {
+        filteredDictionary.push(word);
+    }
+    return filteredDictionary;
+};
+
 export const npcSelectSecret = (difficulty = 5) => {
-    const filteredDictionary = getFilteredDictionary(difficulty);
+    const filteredDictionary = getEasyFilteredDictionary();
+    // This logs the secret when in testing.
     // const secret = filteredDictionary[Math.floor(Math.random() * Math.floor(filteredDictionary.length))];
     // console.log(secret);
     // return secret;
