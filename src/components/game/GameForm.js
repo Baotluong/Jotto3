@@ -42,7 +42,7 @@ export default class GameForm extends React.Component {
                     type="text"
                     placeholder={this.props.isDisabled 
                         ? "It's your opponent's turn!"
-                        : "Enter a 5 letter word. See how letters many are right."}
+                        : "Enter word with 5 letters. See how many match."}
                     value={this.state.guess}
                     onChange={this.onGuessChange}
                     disabled={this.props.isDisabled}
