@@ -33,11 +33,11 @@ export default class SecretSelector extends React.Component {
         return (
             <div>
                 <div className="input__instructions">Submit your 5-letter secret word. It cannot contain duplicates.</div>
+                {this.state.error && <div className="input__error">{this.state.error}</div>}
                 <form
                     onSubmit={this.onSubmitSecret}
                     className="input__box"
-                >
-                    {this.state.error && <div className="input__error">{this.state.error}</div>}
+                >       
                     <input
                         className="input__input"
                         type="text"
