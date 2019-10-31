@@ -12,19 +12,17 @@ exports[`should render Header correctly 1`] = `
     >
       <Link
         className="header__title"
-        replace={false}
-        to="/dashboard"
+        to="/"
       >
         <h1>
-          Boilerplate
+          <span
+            className="header__question-mark"
+          >
+            ?
+          </span>
+          JOTTO
         </h1>
       </Link>
-      <button
-        className="button button--link"
-        onClick={[Function]}
-      >
-        Logout
-      </button>
     </div>
   </div>
 </header>
