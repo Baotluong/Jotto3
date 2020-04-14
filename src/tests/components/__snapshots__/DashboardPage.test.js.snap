@@ -1,7 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should render DashboardPage correctly 1`] = `
-<div>
-  Dashboard page content
+exports[`DashboardPage should render DashboardPage correctly 1`] = `
+<div
+  className="content-container"
+>
+  <div
+    className="dashboard__buttons"
+  >
+    <button
+      className="button dashboard__button dashboard__button__versus"
+      onClick={[Function]}
+    >
+      (2P) Play with a Friend!
+    </button>
+    <button
+      className="button dashboard__button"
+      onClick={[Function]}
+    >
+      (1P) Start New Game
+    </button>
+    <Link
+      to="/game/undefined"
+    >
+      <button
+        className="button dashboard__button"
+      >
+        (1P) Continue Game
+      </button>
+    </Link>
+  </div>
 </div>
 `;

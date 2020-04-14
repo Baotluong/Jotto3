@@ -20,6 +20,7 @@ export class GameBoard extends React.Component {
             gameID: this.props.gameID,
             error: '',
             isLoading: false,
+            isLoadingGuess: false,
             myPlayerNumber: '',
             mySecret: '',
             oppSecret: '',
@@ -62,11 +63,12 @@ export class GameBoard extends React.Component {
                 this.setState(() => ({
                     guesses: [
                         ...this.state.guesses,
-                        { guess: updates.guess, matches: updates.matches }
+                        { guess: updates.guess, matches: updates.matches },
                     ],
                     showWinModal,
                     showLossModal,
-                    isGameOver
+                    isGameOver,
+                    isLoadingGuess: false
                 }));
                 break;
             case 'ADD_PLAYER':
@@ -116,10 +118,23 @@ export class GameBoard extends React.Component {
             this.props.redirectWithError(error.message);
         });
     }
+    startTimeOutToReload = () => {
+        const waitThisLongUntilReload = 5000;
+        setTimeout(() => {
+            if (this.state.isLoadingGuess == true) {
+                window.location.reload();
+            }
+        }, waitThisLongUntilReload)
+    }
     onSubmitGuess = (guess) => {
         const error = checkForValidGuess(guess, this.getMyGuessList());
         if (!error) {
             const matches = compareGuessToSecret(guess, this.state.oppSecret);
+            if (this.state.isSinglePlayer) {
+                this.setState(({
+                    isLoadingGuess: true
+                }), this.startTimeOutToReload);
+            }
             this.props.startAddGuess(this.state.gameID, guess, matches)
             .catch(e => {
                 console.log(e);
@@ -148,11 +163,12 @@ export class GameBoard extends React.Component {
     isGameStarted = () => {
         return this.state.isSinglePlayer || (this.state.mySecret && this.state.oppSecret);
     }
-    isMyTurn = () => {
+    isNotMyTurn = () => {
         const whichPlayersTurnIsIt = this.state.guesses.length % 2 === 0 ? 'one' : 'two';
         
-        return this.state.isSinglePlayer || 
-            (this.isGameStarted && whichPlayersTurnIsIt === this.state.myPlayerNumber); 
+        return !this.state.isSinglePlayer
+            && this.isGameStarted
+            && whichPlayersTurnIsIt !== this.state.myPlayerNumber; 
     }
     getMyGuessList = () => {
         if (this.state.isSinglePlayer)
@@ -183,7 +199,8 @@ export class GameBoard extends React.Component {
                 { (this.isGameStarted() && !this.state.isGameOver) &&
                     <GameForm
                         onSubmit={this.onSubmitGuess}
-                        isDisabled={!this.isMyTurn()}
+                        isNotMyTurn={this.isNotMyTurn()}
+                        isLoadingGuess={this.state.isLoadingGuess}
                     />
                 }
                 { !this.isGameStarted() && this.state.mySecret && this.state.oppUserID && 

@@ -29,28 +29,36 @@ export default class GameForm extends React.Component {
             }));
         }
     }
+    getPlaceholder = () => {
+        if (this.props.isNotMyTurn) {
+            return "It's your opponent's turn!";
+        } else if (this.props.isLoadingGuess) {
+            return "Please wait. Saving your guess."
+        } else {
+            return "Enter word with 5 letters. See how many match.";
+        }
+    }
     render() {
         return (
             <div>
                 {this.state.error && <p className="input__error">{this.state.error}</p>}
                 <form
-                onSubmit={this.onSubmit}
-                className="input__box"
-            >
-                <input
-                    className="input__input"
-                    type="text"
-                    placeholder={this.props.isDisabled 
-                        ? "It's your opponent's turn!"
-                        : "Enter word with 5 letters. See how many match."}
-                    value={this.state.guess}
-                    onChange={this.onGuessChange}
-                    disabled={this.props.isDisabled}
-                />
-                <button disabled={this.props.isDisabled} className="button input__button">
-                    {this.props.isDisabled ? "Waiting..." : "Guess!"}
-                </button>
-            </form>
+                    onSubmit={this.onSubmit}
+                    className="input__box"
+                >
+                    <input
+                        className="input__input"
+                        type="text"
+                        ref={input => input && input.focus()}
+                        placeholder={this.getPlaceholder()}
+                        value={this.state.guess}
+                        onChange={this.onGuessChange}
+                        disabled={this.props.isNotMyTurn || this.props.isLoadingGuess}
+                    />
+                    <button disabled={this.props.isNotMyTurn || this.props.isLoadingGuess} className="button input__button">
+                        {this.props.isNotMyTurn || this.props.isLoadingGuess ? "Waiting..." : "Guess!"}
+                    </button>
+                </form>
             </div>          
         );
     }
